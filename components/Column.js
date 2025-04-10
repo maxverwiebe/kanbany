@@ -1,46 +1,59 @@
-import Card from "./Card";
 import { useState } from "react";
+import Card from "./Card";
+import { useBoard } from "@/lib/BoardContext";
 
-export default function Column({ column, cards, handlers }) {
-  const [newText, setNewText] = useState("");
+export default function Column({ column }) {
+  const {
+    cards,
+    addCard,
+    onCardClick,
+    onDragStart,
+    onDragEnd,
+    onDrop,
+    openModal,
+  } = useBoard();
 
-  const addCard = () => {
+  const [newText, setNewText] = useState("test");
+
+  const handleAddCard = () => {
     if (!newText.trim()) return;
-    handlers.addCard(column.id, newText);
+    addCard(column.id, newText);
     setNewText("");
+  };
+
+  const addCardInColumn = () => {
+    const id = addCard(column.id, newText);
+    openModal(id);
   };
 
   return (
     <div
-      className="bg-gray-100 p-4 rounded w-64 flex flex-col"
-      onDrop={(e) => handlers.onDrop(e, column.id)}
-      onDragOver={handlers.onDragOver}
+      className="bg-gray-100 p-4 rounded flex flex-col min-w-64 max-w-160 shadow-md overflow-visible"
+      onDrop={(e) => onDrop(e, column.id)}
+      onDragOver={(e) => e.preventDefault()}
     >
-      <h2 className="font-semibold mb-4">{column.title}</h2>
-      <div className="flex-1">
-        {cards.map((card) => (
-          <Card
-            key={card.id}
-            card={card}
-            onClick={handlers.onCardClick}
-            onDragStart={handlers.onDragStart}
-            onDragEnd={handlers.onDragEnd}
-          />
-        ))}
-      </div>
-      <div className="mt-4">
-        <input
-          className="w-full p-2 mb-2 rounded border"
-          placeholder="Neue Karte"
-          value={newText}
-          onChange={(e) => setNewText(e.target.value)}
-        />
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-semibold">{column.title}</h2>
         <button
-          className="w-full bg-blue-500 text-white py-2 rounded"
-          onClick={addCard}
+          className="text-2xl px-2 text-violet-500 hover:bg-violet-100 rounded-full"
+          onClick={addCardInColumn}
         >
-          Karte hinzufügen
+          +
         </button>
+      </div>
+
+      <div className="flex-1">
+        {cards
+          .filter((card) => card.columnId === column.id)
+          .map((card) => (
+            <Card
+              key={card.id}
+              card={card}
+              onClick={onCardClick}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+            />
+          ))}
       </div>
     </div>
   );

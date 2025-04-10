@@ -1,19 +1,28 @@
-function Label({ text, color }) {
+import { useBoard } from "@/lib/BoardContext";
+
+function Label({ uuid }) {
+  const { labels } = useBoard();
+  const label = labels.find((l) => l.id === uuid);
+
+  if (!label) return null;
+
   return (
     <div
-      className={`px-3 py-1 rounded-md text-xs font-medium text-white shadow-sm ${color} transition-all hover:opacity-90`}
+      className={`px-3 py-1 rounded-md text-xs font-medium text-white ${label.color} transition-all hover:opacity-90`}
     >
-      {text}
+      {label.text}
     </div>
   );
 }
-function Labels({ labels }) {
+
+function Labels({ labelIds }) {
   return (
-    <div className="flex space-x-2">
-      {labels.map((label) => (
-        <Label key={label.text} text={label.text} color={label.color} />
+    <div className="flex flex-wrap gap-2 mb-1 mt-1">
+      {labelIds.map((id) => (
+        <Label key={id} uuid={id} />
       ))}
     </div>
   );
 }
+
 export default Labels;

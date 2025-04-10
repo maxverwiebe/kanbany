@@ -1,0 +1,37 @@
+{
+    "general": {
+        "add": "Add",
+        "delete": "Delete",
+        "close": "Close",
+        "save": "Save"
+    },
+    "card": {
+        "edit": "Edit card",
+        "editor": "Card Editor",
+        "desc": "Description",
+        "title": "Title",
+        "column": "Change column",
+        "labels": "Change labels"
+    },
+    "column": {
+        "add": "Add column",
+        "manage": "Manage columns",
+        "manager": "Column Manager",
+        "new": "New column title"
+    },
+    "label": {
+        "add": "Add label",
+        "manage": "Manage labels",
+        "manager": "Label Manager",
+        "title": "Label title",
+        "empty": "No labels yet :(",
+        "toastSuccessfullyCreated": "Created label {{name}}!",
+        "toastSuccessfullyDeleted": "Deleted label {{name}}!"
+    },
+    "data": {
+        "toastImportSuccess": "Import successful!",
+        "toastImportError": "Import failed: {{error}}",
+        "toastExportSuccess": "Export successful!",
+        "toastExportError": "Export failed!"
+    }
+}

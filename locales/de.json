@@ -1,0 +1,12 @@
+{
+    "card": {
+        "edit": "Karte bearbeiten",
+        "delete": "Löschen",
+        "save": "Speichern",
+        "cancel": "Abbrechen"
+    },
+    "column": {
+        "add": "Spalte hinzufügen",
+        "manage": "Spalten verwalten"
+    }
+}
