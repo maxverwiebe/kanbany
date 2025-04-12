@@ -17,6 +17,7 @@ export default function Card({ card }) {
       onClick={() => openModal(card.id)}
       onDragStart={(e) => onDragStart(e, card.id)}
       onDragEnd={onDragEnd}
+      data-card-id={card.id}
     >
       <h3 className="font-medium">{truncateText(card.text, 25)}</h3>
       <Labels labelIds={card.labels} />

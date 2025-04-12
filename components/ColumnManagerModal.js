@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useBoard } from "@/lib/BoardContext";
 import i18n from "@/lib/i18n";
+import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
 
 export default function ColumnManagerModal({ onClose }) {
   const { columns, setColumns, addColumn } = useBoard();
   const [newTitle, setNewTitle] = useState("");
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleAddColumn = () => {
     if (!newTitle.trim()) return;
@@ -27,12 +29,29 @@ export default function ColumnManagerModal({ onClose }) {
     setColumns(newColumns);
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen((prev) => !prev);
+  };
+
+  const modalContainerClasses = isFullscreen
+    ? "bg-white p-6 rounded shadow-lg w-full h-full max-w-none max-h-none overflow-y-auto"
+    : "bg-white p-6 rounded shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto";
+
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
-      <div className="bg-white p-6 rounded shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-semibold text-center mb-6">
-          {i18n.t("column.manager")}
-        </h2>
+      <div className={modalContainerClasses}>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-semibold text-center">
+            {i18n.t("column.manager")}
+          </h2>
+          <button
+            onClick={toggleFullscreen}
+            className="p-2 rounded hover:bg-violet-100 text-neutral-400 font-thin text-2xl transition"
+            title={isFullscreen ? "Shrink modal" : "Fullscreen modal"}
+          >
+            {isFullscreen ? <MdFullscreenExit /> : <MdFullscreen />}
+          </button>
+        </div>
 
         <div className="space-y-3 mb-8">
           {columns.map((col, index) => (

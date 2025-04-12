@@ -1,40 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+<div align="center"><img width="350" alt="image" src="https://github.com/user-attachments/assets/d2e439ae-8161-4ce8-8c40-7e8e882d95b1" href="kanbany.vercel.app" />
 
-## Getting Started
 
-First, run the development server:
+Check the deployed web-app: [kanbany.vercel.app](https://kanbany.vercel.app)</div>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# Kanbany
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Kanbany is a minimalist Trello clone and Kanban board application built with React and Next.js. Organize your tasks with an intuitive drag-and-drop interface and manage your board entirely in your browser thanks to local storage persistence.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/e143f261-6a84-4c2c-941d-ceaf6ec99f5b" />
+<details>
+  <summary>Card Editor</summary>
+  
+  ![Card Modal](https://github.com/user-attachments/assets/021e31a6-0743-4f02-809c-95ee96f4a9d3)
+  
+</details>
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+<details>
+  <summary>Label Manager</summary>
+  
+  ![Label Manager](https://github.com/user-attachments/assets/e4a296e8-043d-4115-a96c-b280c8b4e4ac)
+  
+</details>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+<details>
+  <summary>Column Manager</summary>
+  
+  ![Column Manager](https://github.com/user-attachments/assets/e6f12ae9-bff2-4b07-9e5d-0aa2a6ace5a5)
+  
+</details>
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+<details>
+  <summary>Menu</summary>
+  
+  ![Responsive View](https://github.com/user-attachments/assets/993c5126-bb57-466d-b1b7-f8171539ba53)
+  </details>
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Drag & Drop**
+  - Easily move cards between columns with smooth drag-and-drop interactions.
+- **Local Data Storage**
+  - All board data is stored locally in your browser, ensuring your work is saved between sessions.
+- **Label Management**
+  - Assign and manage custom labels to classify your tasks.
+- **Column Management**
+  - Add, remove, and reorder columns to tailor your workflow.
+- **Responsive Design**
+  - Enjoy a clean, modern UI that adapts to your device.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clone the repository:**
 
-## Deploy on Vercel
+   ```bash
+   git clone https://github.com/maxverwiebe/kanbany.git
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Navigate to the project directory:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+   ```bash
+   cd kanbany
+   ```
+
+3. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+4. **Run the development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) in your browser to see Kanbany in action!
+
+## Usage
+
+- **Editing Cards:** Click on any card to open a modal where you can update the task title, description, assign labels, and change its column.
+- **Creating Cards:** Use the "+ Add" button within each column to quickly add new cards.
+- **Managing Columns & Labels:** Access the dropdown menu in the header to open the column or label management modals.
+- **Data Portability:** Export your board data to a JSON file and import it later to restore your board state or share it. But don't worry, your data is also being stored in your local storage automatically!
+
+## Technologies Used
+
+- **React & Next.js:** For building a dynamic, server-rendered web application.
+- **Tailwind CSS:** For rapid UI development and responsive design.
+- **Local Storage:** To maintain your board data across sessions.
+- **React Context API:** For managing state across the application.
+
+## Contributing
+
+Contributions are **VERY** welcome! Feel free to fork the repository and submit pull requests with improvements or new features.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).

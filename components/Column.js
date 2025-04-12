@@ -15,12 +15,6 @@ export default function Column({ column }) {
 
   const [newText, setNewText] = useState("test");
 
-  const handleAddCard = () => {
-    if (!newText.trim()) return;
-    addCard(column.id, newText);
-    setNewText("");
-  };
-
   const addCardInColumn = () => {
     const id = addCard(column.id, newText);
     openModal(id);

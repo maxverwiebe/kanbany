@@ -29,9 +29,12 @@
         "toastSuccessfullyDeleted": "Deleted label {{name}}!"
     },
     "data": {
+        "toastImportSuccessLS": "Automatically imported from local storage!",
         "toastImportSuccess": "Import successful!",
         "toastImportError": "Import failed: {{error}}",
         "toastExportSuccess": "Export successful!",
-        "toastExportError": "Export failed!"
+        "toastExportError": "Export failed!",
+        "export": "Export as JSON",
+        "import": "Import from JSON"
     }
 }
