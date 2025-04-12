@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Column from "./Column";
 import { v4 as uuid } from "uuid";
 import CardModal from "./CardModal";
@@ -9,6 +9,8 @@ import { useToast } from "@/lib/ToastContext";
 
 import ColumnManagerModal from "./ColumnManagerModal";
 import LabelManagerModal from "./LabelManagerModal";
+import ToggleSwitch from "./basic/ToggleSwitch";
+import LocalStorageSaver from "@/lib/LocalStorageSaver";
 
 export default function Board() {
   const {
@@ -22,6 +24,10 @@ export default function Board() {
     closeModal,
     importBoard,
     exportBoard,
+    setColumns,
+    setCards,
+    setLabels,
+    labels,
   } = useBoard();
 
   const [showColManager, setShowColManager] = useState(false);
@@ -30,32 +36,12 @@ export default function Board() {
 
   const [draggedId, setDraggedId] = useState(null);
 
+  const [importChecked, setImportChecked] = useState(false);
+
   const { addToast } = useToast();
-
-  const onDragStart = (e, id) => {
-    setDraggedId(id);
-    e.currentTarget.classList.add("opacity-50");
-  };
-  const onDragEnd = (e) => {
-    e.currentTarget.classList.remove("opacity-50");
-    setDraggedId(null);
-  };
-  const onDragOver = (e) => e.preventDefault();
-  const onDrop = (e, newColumnId) => {
-    setCards((prev) =>
-      prev.map((card) =>
-        card.id === draggedId ? { ...card, columnId: newColumnId } : card
-      )
-    );
-  };
-
   const onCardClick = (id) => setModalCardId(id);
 
   const handlers = {
-    onDragStart,
-    onDragEnd,
-    onDragOver,
-    onDrop,
     onCardClick,
   };
 
@@ -103,12 +89,31 @@ export default function Board() {
     reader.readAsText(file);
   };
 
+  const { ImportLocalStorage, ExportLocalStorage } = LocalStorageSaver();
+  useEffect(() => {
+    if (!importChecked) return;
+    const jsonString = exportBoard();
+    ExportLocalStorage(jsonString);
+  }, [columns, cards, labels]);
+
+  useEffect(() => {
+    const loadLocalData = async () => {
+      const localData = ImportLocalStorage();
+      if (localData) {
+        await importBoard(localData);
+        addToast(i18n.t("data.toastImportSuccessLS"), "success");
+      }
+      setImportChecked(true);
+    };
+
+    loadLocalData();
+  }, []);
+
   return (
     <div>
       <div className="relative inline-block mb-4">
         <div className="flex items-center justify-between px-4 py-2 bg-gray-100 shadow-md">
           <h1 className="text-xl font-bold text-gray-800">KANBANY</h1>
-
           <button
             className="flex items-center justify-center w-10 h-10 text-violet-500 hover:bg-violet-100 rounded-full transition ml-4"
             onClick={toggleDropdown}
@@ -177,6 +182,33 @@ export default function Board() {
             handlers={handlers}
           />
         ))}
+
+        <div className="group">
+          <div className="flex-shrink-0 w-64 h-full bg-gray-100/0 p-4 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <button
+              className="flex items-center justify-center w-full h-full text-violet-500 hover:bg-violet-100 rounded transition"
+              onClick={() => {
+                setShowColManager(true);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-8 h-8"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              <span className="ml-2">{i18n.t("column.add")}</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {modalCardId && (
