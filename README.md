@@ -1,10 +1,13 @@
-<img width="817" alt="image" src="https://github.com/user-attachments/assets/d2e439ae-8161-4ce8-8c40-7e8e882d95b1" />
+<div align="center"><img width="350" alt="image" src="https://github.com/user-attachments/assets/d2e439ae-8161-4ce8-8c40-7e8e882d95b1" href="kanbany.vercel.app" />
+
+
+Check the deployed web-app: [kanbany.vercel.app](kanbany.vercel.app)</div>
 
 # Kanbany
 
 Kanbany is a minimalist Trello clone and Kanban board application built with React and Next.js. Organize your tasks with an intuitive drag-and-drop interface and manage your board entirely in your browser thanks to local storage persistence.
 
-<img width="848" alt="image" src="https://github.com/user-attachments/assets/e143f261-6a84-4c2c-941d-ceaf6ec99f5b" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/e143f261-6a84-4c2c-941d-ceaf6ec99f5b" />
 <details>
   <summary>Card Editor</summary>
   
