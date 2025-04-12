@@ -18,7 +18,7 @@ const COLORS = [
 ];
 
 export default function LabelManagerModal({ onClose }) {
-  const { labels, setLabels } = useBoard();
+  const { labels, setLabels, addLabel } = useBoard();
   const [newTitle, setNewTitle] = useState("");
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
 
@@ -26,12 +26,7 @@ export default function LabelManagerModal({ onClose }) {
 
   const handleAddLabel = () => {
     if (!newTitle.trim()) return;
-    const newLabel = {
-      id: uuid(),
-      text: newTitle,
-      color: selectedColor,
-    };
-    setLabels((prev) => [...prev, newLabel]);
+    addLabel(newTitle, selectedColor);
     setSelectedColor(COLORS[0]);
 
     addToast(

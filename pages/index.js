@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Kanban Board</title>
+        <title>Kanbany</title>
       </Head>
       <main className="p-4">
         <ToastProvider>
