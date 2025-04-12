@@ -5,10 +5,18 @@ import { useToast } from "@/lib/ToastContext";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
 import { GrNewWindow } from "react-icons/gr";
+import { MdDeleteOutline } from "react-icons/md";
 
 export default function CardModal() {
-  const { cards, columns, modalCardId, updateCard, closeModal, labels } =
-    useBoard();
+  const {
+    cards,
+    columns,
+    modalCardId,
+    updateCard,
+    closeModal,
+    labels,
+    setCards,
+  } = useBoard();
   const card = cards.find((c) => c.id === modalCardId);
 
   const [title, setTitle] = useState(card?.text || "");
@@ -70,6 +78,12 @@ export default function CardModal() {
     } else if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
       saveDescription();
     }
+  };
+
+  const handleDelete = () => {
+    setCards((prev) => prev.filter((c) => c.id !== card.id));
+    addToast("Deleted card!", "success");
+    closeModal();
   };
 
   useEffect(() => {
@@ -225,19 +239,27 @@ export default function CardModal() {
             </div>
           </div>
 
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-between items-center">
             <button
-              className="px-4 py-2 bg-gray-300 text-neutral-800 rounded-md text-sm hover:bg-gray-400 transition"
-              onClick={closeModal}
+              onClick={handleDelete}
+              className="px-3 py-1 text-2xl text-red-500 rounded bg-red-100 hover:bg-red-200 transition"
             >
-              {i18n.t("general.close")}
+              <MdDeleteOutline />
             </button>
-            <button
-              className="px-4 py-2 bg-violet-500 text-white rounded-md text-sm hover:bg-violet-600 transition"
-              onClick={save}
-            >
-              {i18n.t("general.save")}
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 bg-gray-300 text-neutral-800 rounded-md text-sm hover:bg-gray-400 transition"
+              >
+                {i18n.t("general.close")}
+              </button>
+              <button
+                onClick={save}
+                className="px-4 py-2 bg-violet-500 text-white rounded-md text-sm hover:bg-violet-600 transition"
+              >
+                {i18n.t("general.save")}
+              </button>
+            </div>
           </div>
         </div>
       </div>
