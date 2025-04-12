@@ -1,7 +1,7 @@
 <div align="center"><img width="350" alt="image" src="https://github.com/user-attachments/assets/d2e439ae-8161-4ce8-8c40-7e8e882d95b1" href="kanbany.vercel.app" />
 
 
-Check the deployed web-app: [kanbany.vercel.app](kanbany.vercel.app)</div>
+Check the deployed web-app: [kanbany.vercel.app](https://kanbany.vercel.app)</div>
 
 # Kanbany
 
