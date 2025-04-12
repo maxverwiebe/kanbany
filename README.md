@@ -4,6 +4,34 @@
 
 Kanbany is a minimalist Trello clone and Kanban board application built with React and Next.js. Organize your tasks with an intuitive drag-and-drop interface and manage your board entirely in your browser thanks to local storage persistence.
 
+<img width="848" alt="image" src="https://github.com/user-attachments/assets/e143f261-6a84-4c2c-941d-ceaf6ec99f5b" />
+<details>
+  <summary>Card Editor</summary>
+  
+  ![Card Modal](https://github.com/user-attachments/assets/021e31a6-0743-4f02-809c-95ee96f4a9d3)
+  
+</details>
+
+<details>
+  <summary>Label Manager</summary>
+  
+  ![Label Manager](https://github.com/user-attachments/assets/e4a296e8-043d-4115-a96c-b280c8b4e4ac)
+  
+</details>
+
+<details>
+  <summary>Column Manager</summary>
+  
+  ![Column Manager](https://github.com/user-attachments/assets/e6f12ae9-bff2-4b07-9e5d-0aa2a6ace5a5)
+  
+</details>
+
+<details>
+  <summary>Menu</summary>
+  
+  ![Responsive View](https://github.com/user-attachments/assets/993c5126-bb57-466d-b1b7-f8171539ba53)
+  </details>
+
 ## Features
 
 - **Drag & Drop**
