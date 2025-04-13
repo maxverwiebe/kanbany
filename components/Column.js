@@ -36,7 +36,7 @@ export default function Column({ column }) {
         </button>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 overflow-y-auto max-h-[70vh] overflow-show">
         {cards
           .filter((card) => card.columnId === column.id)
           .map((card) => (
