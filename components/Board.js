@@ -173,7 +173,7 @@ export default function Board() {
         )}
       </div>
 
-      <div className="flex space-x-4 overflow-x-auto">
+      <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 overflow-x-auto">
         {columns.map((col) => (
           <Column
             key={col.id}
