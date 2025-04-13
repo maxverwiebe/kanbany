@@ -12,7 +12,7 @@ export default function Card({ card }) {
 
   return (
     <div
-      className="bg-white p-2 mb-2 rounded shadow cursor-pointer max-w-55"
+      className="bg-white p-2 mb-2 rounded shadow cursor-pointer w-full"
       draggable
       onClick={() => openModal(card.id)}
       onDragStart={(e) => onDragStart(e, card.id)}
