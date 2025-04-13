@@ -110,86 +110,14 @@ export default function Board() {
   }, []);
 
   return (
-    <div>
-      <div className="relative inline-block mb-4">
-        <div className="flex items-center justify-between px-4 py-2 bg-gray-100 shadow-md">
-          <h1 className="text-xl font-bold text-gray-800">KANBANY</h1>
-          <button
-            className="flex items-center justify-center w-10 h-10 text-violet-500 hover:bg-violet-100 rounded-full transition ml-4"
-            onClick={toggleDropdown}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 5.25h16.5m-16.5 6h16.5m-16.5 6h16.5"
-              />
-            </svg>
-          </button>
-        </div>
-
-        {showDropdown && (
-          <div className="absolute mt-2 w-48 rounded drop-shadow-lg bg-white text-neutral-700 z-10">
+    <div className="flex flex-col">
+      <div>
+        <div className="relative inline-block mb-4">
+          <div className="flex items-center justify-between px-4 py-2 bg-gray-100 shadow-md">
+            <h1 className="text-xl font-bold text-gray-800">KANBANY</h1>
             <button
-              className="w-full text-left px-4 py-2 hover:bg-violet-100"
-              onClick={handleOpenColManager}
-            >
-              {i18n.t("column.manage")}
-            </button>
-            <button
-              className="w-full text-left px-4 py-2 hover:bg-violet-100"
-              onClick={handleOpenLabelManager}
-            >
-              {i18n.t("label.manage")}
-            </button>
-            <div className="h-5"></div>
-            <button
-              className="w-full text-left px-4 py-2 hover:bg-violet-100"
-              onClick={handleFileExport}
-            >
-              {i18n.t("data.export")}
-            </button>
-            <input
-              id="jsonFileInput"
-              type="file"
-              accept=".json"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-            <button
-              className="w-full text-left px-4 py-2 hover:bg-violet-100"
-              onClick={() => document.getElementById("jsonFileInput").click()}
-            >
-              {i18n.t("data.import")}
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 overflow-x-auto">
-        {columns.map((col) => (
-          <Column
-            key={col.id}
-            column={col}
-            cards={cards.filter((c) => c.columnId === col.id)}
-            handlers={handlers}
-          />
-        ))}
-
-        <div className="group">
-          <div className="flex-shrink-0 w-64 h-full bg-gray-100/0 p-4 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <button
-              className="flex items-center justify-center w-full h-full text-violet-500 hover:bg-violet-100 rounded transition"
-              onClick={() => {
-                setShowColManager(true);
-              }}
+              className="flex items-center justify-center w-10 h-10 text-violet-500 hover:bg-violet-100 rounded-full transition ml-4"
+              onClick={toggleDropdown}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -197,39 +125,95 @@ export default function Board() {
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="w-8 h-8"
+                className="w-6 h-6"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
+                  d="M3.75 5.25h16.5m-16.5 6h16.5m-16.5 6h16.5"
                 />
               </svg>
-              <span className="ml-2">{i18n.t("column.add")}</span>
             </button>
           </div>
-        </div>
-      </div>
 
-      <footer className="w-full mt-5 text-center text-neutral-400 text-sm">
-        <p className="flex flex-wrap justify-center items-center gap-2">
-          <span>Data is stored in Local Storage.</span>
-          <span>|</span>
-          <span>
-            Open Source:&nbsp;
-            <a
-              className="text-violet-300 hover:underline"
-              href="https://github.com/maxverwiebe/kanbany"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub Link
-            </a>
-          </span>
-          <span>|</span>
-          <span>© 2025 Kanbany. All rights reserved.</span>
-        </p>
-      </footer>
+          {showDropdown && (
+            <div className="absolute mt-2 w-48 rounded drop-shadow-lg bg-white text-neutral-700 z-10">
+              <button
+                className="w-full text-left px-4 py-2 hover:bg-violet-100"
+                onClick={handleOpenColManager}
+              >
+                {i18n.t("column.manage")}
+              </button>
+              <button
+                className="w-full text-left px-4 py-2 hover:bg-violet-100"
+                onClick={handleOpenLabelManager}
+              >
+                {i18n.t("label.manage")}
+              </button>
+              <div className="h-5"></div>
+              <button
+                className="w-full text-left px-4 py-2 hover:bg-violet-100"
+                onClick={handleFileExport}
+              >
+                {i18n.t("data.export")}
+              </button>
+              <input
+                id="jsonFileInput"
+                type="file"
+                accept=".json"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+              <button
+                className="w-full text-left px-4 py-2 hover:bg-violet-100"
+                onClick={() => document.getElementById("jsonFileInput").click()}
+              >
+                {i18n.t("data.import")}
+              </button>
+            </div>
+          )}
+        </div>
+
+        <main className="flex-grow">
+          <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 overflow-x-auto">
+            {columns.map((col) => (
+              <Column
+                key={col.id}
+                column={col}
+                cards={cards.filter((c) => c.columnId === col.id)}
+                handlers={handlers}
+              />
+            ))}
+
+            <div className="group">
+              <div className="flex-shrink-0 w-64 h-full bg-gray-100/0 p-4 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <button
+                  className="flex items-center justify-center w-full h-full text-violet-500 hover:bg-violet-100 rounded transition"
+                  onClick={() => {
+                    setShowColManager(true);
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-8 h-8"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                  <span className="ml-2">{i18n.t("column.add")}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
 
       {modalCardId && (
         <CardModal
