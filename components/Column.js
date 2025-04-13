@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Card from "./Card";
 import { useBoard } from "@/lib/BoardContext";
+import { FaRegStickyNote } from "react-icons/fa";
 
 export default function Column({ column }) {
   const {
@@ -15,6 +16,8 @@ export default function Column({ column }) {
 
   const [newText, setNewText] = useState("test");
 
+  const cardCount = cards.filter((card) => card.columnId === column.id).length;
+
   const addCardInColumn = () => {
     const id = addCard(column.id, newText);
     openModal(id);
@@ -27,7 +30,13 @@ export default function Column({ column }) {
       onDragOver={(e) => e.preventDefault()}
     >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold">{column.title}</h2>
+        <div className="flex items-center space-x-2 group">
+          <h2 className="font-semibold">{column.title}</h2>
+          <div className="hidden group-hover:flex items-center bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full transition-all duration-200">
+            <FaRegStickyNote className="mr-1" />
+            <span>{cardCount}</span>
+          </div>
+        </div>
         <button
           className="text-2xl px-2 text-violet-500 hover:bg-violet-100 rounded-full"
           onClick={addCardInColumn}
