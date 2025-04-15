@@ -1,5 +1,6 @@
 import Labels from "./Labels";
 import { useBoard } from "@/lib/BoardContext";
+import { MdOutlineCheckBox, MdFormatAlignLeft } from "react-icons/md";
 
 export default function Card({ card }) {
   const { openModal, onDragStart, onDragEnd } = useBoard();
@@ -9,6 +10,25 @@ export default function Card({ card }) {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
+
+  const calculateChecklistProgress = () => {
+    const checklistArray = card?.checklist;
+    if (!checklistArray || !Array.isArray(checklistArray)) return false;
+
+    let total = 0;
+    let completed = 0;
+
+    checklistArray.forEach((list) => {
+      if (list && Array.isArray(list.tasks)) {
+        total += list.tasks.length;
+        completed += list.tasks.filter((task) => task.completed).length;
+      }
+    });
+
+    return total === 0 ? false : `${completed}/${total}`;
+  };
+
+  const checklistProgress = calculateChecklistProgress();
 
   return (
     <div
@@ -22,11 +42,17 @@ export default function Card({ card }) {
       <h3 className="font-medium">{truncateText(card.text, 25)}</h3>
       <Labels labelIds={card.labels} />
 
-      {card.description && (
-        <p className="text-xs text-gray-500">
-          {truncateText(card.description, 50)}
-        </p>
-      )}
+      <div className="flex">
+        {card.description && (
+          <MdFormatAlignLeft className="text-gray-400 text-lg mt-1 mr-2" />
+        )}
+        {checklistProgress && (
+          <div className="flex items-center text-xs text-gray-500 mt-1">
+            <span>{checklistProgress}</span>
+            <MdOutlineCheckBox className="ml-1 text-lg text-gray-400" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
