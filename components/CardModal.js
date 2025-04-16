@@ -217,13 +217,12 @@ export default function CardModal() {
 
   const saveDescFullscreen = () => {
     setDescription(fullscreenDesc);
-    setSavedDescription(fullscreenDesc);
     setIsDescFullscreen(false);
   };
 
   const cardDescClasses = isFullscreen
     ? "h-[45vh] overflow-y-auto"
-    : "h-[30vh] overflow-y-auto";
+    : "h-[25vh] overflow-y-auto";
 
   if (!card) return null;
 
@@ -295,11 +294,14 @@ export default function CardModal() {
             ) : (
               <textarea
                 className={
-                  "w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400 " +
+                  "w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400 resize-y " +
                   cardDescClasses
                 }
                 defaultValue={description}
-                onBlur={(e) => setDescription(e.target.value)}
+                onBlur={(e) => {
+                  setDescription(e.target.value);
+                  setIsEditingDescription(false);
+                }}
                 autoFocus
               />
             )}
@@ -412,7 +414,10 @@ export default function CardModal() {
                 cardDescClasses
               }
               defaultValue={description}
-              onBlur={(e) => setDescription(e.target.value)}
+              onBlur={(e) => {
+                setDescription(e.target.value);
+                setIsEditingDescription(false);
+              }}
               autoFocus
             />
           )}
