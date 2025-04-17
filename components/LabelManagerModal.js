@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useBoard } from "@/lib/BoardContext";
 import i18n from "@/lib/i18n";
-import { useToast } from "@/lib/ToastContext";
+import { addToast } from "@/lib/Toast";
 import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
 
 const COLORS = [
@@ -21,7 +21,6 @@ export default function LabelManagerModal({ onClose }) {
   const [newTitle, setNewTitle] = useState("");
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { addToast } = useToast();
 
   const handleAddLabel = () => {
     if (!newTitle.trim()) return;
