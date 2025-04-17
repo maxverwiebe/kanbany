@@ -3,7 +3,8 @@
         "add": "Add",
         "delete": "Delete",
         "close": "Close",
-        "save": "Save"
+        "save": "Save",
+        "darkMode": "Dark Mode"
     },
     "card": {
         "edit": "Edit card",
@@ -11,7 +12,20 @@
         "desc": "Description",
         "title": "Title",
         "column": "Change column",
-        "labels": "Change labels"
+        "labels": "Change labels",
+        "checklistAdd": "Add checklist",
+        "checklistAddTask": "Add task to checklist",
+        "checklistDelete": "Delete checklist",
+        "checklistDeleteTask": "Delete task",
+        "checklist": "Checklist",
+        "modalConfirmUnsavedChanges": "Unsaved Changes",
+        "modalConfirmUnsavedChangesDetails": "You have unsaved changes. Are you sure you want to close the menu?",
+        "modalConfirmUnsavedChangesYes": "Close anyway",
+        "modalConfirmUnsavedChangesNo": "Cancel",
+        "modalConfirmDelete": "Delete Card",
+        "modalConfirmDeleteDetails": "Are you sure that you want to delete this Card? It cannot be undone!",
+        "modalConfirmDeleteYes": "Yes, delete",
+        "modalConfirmDeleteNo": "Cancel"
     },
     "column": {
         "add": "Add column",
