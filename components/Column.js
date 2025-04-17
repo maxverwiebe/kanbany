@@ -25,7 +25,7 @@ export default function Column({ column }) {
 
   return (
     <div
-      className="bg-gray-100 p-4 rounded flex flex-col min-w-64 max-w-160 shadow-md overflow-visible"
+      className="bg-gray-100 p-4 rounded-md flex flex-col min-w-64 max-w-160 shadow-md overflow-visible"
       onDrop={(e) => onDrop(e, column.id)}
       onDragOver={(e) => e.preventDefault()}
     >
