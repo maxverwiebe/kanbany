@@ -5,7 +5,7 @@ import CardModal from "./CardModal";
 import i18n from "@/lib/i18n";
 import { useBoard } from "@/lib/BoardContext";
 
-import { useToast } from "@/lib/ToastContext";
+import { addToast } from "@/lib/Toast";
 
 import ColumnManagerModal from "./ColumnManagerModal";
 import LabelManagerModal from "./LabelManagerModal";
@@ -34,11 +34,10 @@ export default function Board() {
   const [showLabelManager, setShowLabelManager] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const [draggedId, setDraggedId] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const [importChecked, setImportChecked] = useState(false);
 
-  const { addToast } = useToast();
   const onCardClick = (id) => setModalCardId(id);
 
   const handlers = {
@@ -55,6 +54,13 @@ export default function Board() {
   const handleOpenLabelManager = () => {
     setShowLabelManager(true);
     setShowDropdown(false);
+  };
+
+  const handleDarkModeToggle = () => {
+    const value = !isDarkMode;
+    setIsDarkMode(value);
+    localStorage.setItem("darkMode", value.toString());
+    document.documentElement.classList.toggle("dark", value);
   };
 
   const handleFileExport = () => {
@@ -109,11 +115,20 @@ export default function Board() {
     loadLocalData();
   }, []);
 
+  useEffect(() => {
+    const storedDarkMode = localStorage.getItem("darkMode");
+    if (storedDarkMode !== null) {
+      const darkEnabled = storedDarkMode === "true";
+      setIsDarkMode(darkEnabled);
+      document.documentElement.classList.toggle("dark", darkEnabled);
+    }
+  }, []);
+
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-white dark:bg-gray-900">
       <div>
         <div className="relative inline-block mb-4">
-          <div className="flex items-center justify-between px-4 py-2 bg-gray-100 shadow-md">
+          <div className="flex items-center justify-between px-4 py-2 bg-gray-100 shadow-md rounded-md">
             <h1 className="text-xl font-bold text-gray-800">KANBANY</h1>
             <button
               className="flex items-center justify-center w-10 h-10 text-violet-500 hover:bg-violet-100 rounded-full transition ml-4"
@@ -137,22 +152,30 @@ export default function Board() {
           </div>
 
           {showDropdown && (
-            <div className="absolute mt-2 w-48 rounded drop-shadow-lg bg-white text-neutral-700 z-10">
+            <div className="absolute mt-2 w-48 rounded drop-shadow-lg bg-neutral-50 text-neutral-700 z-10">
               <button
-                className="w-full text-left px-4 py-2 hover:bg-violet-100"
+                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded"
                 onClick={handleOpenColManager}
               >
                 {i18n.t("column.manage")}
               </button>
               <button
-                className="w-full text-left px-4 py-2 hover:bg-violet-100"
+                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded"
                 onClick={handleOpenLabelManager}
               >
                 {i18n.t("label.manage")}
               </button>
               <div className="h-5"></div>
+              <div className="w-full text-left px-4 py-2 hover:bg-violet-100 flex justify-between items-center">
+                <span>{i18n.t("general.darkMode")}</span>
+                <ToggleSwitch
+                  initial={isDarkMode}
+                  onToggle={handleDarkModeToggle}
+                />
+              </div>
+              <div className="h-5"></div>
               <button
-                className="w-full text-left px-4 py-2 hover:bg-violet-100"
+                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded"
                 onClick={handleFileExport}
               >
                 {i18n.t("data.export")}
@@ -165,7 +188,7 @@ export default function Board() {
                 onChange={handleFileChange}
               />
               <button
-                className="w-full text-left px-4 py-2 hover:bg-violet-100"
+                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded"
                 onClick={() => document.getElementById("jsonFileInput").click()}
               >
                 {i18n.t("data.import")}
