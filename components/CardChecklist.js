@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MdChecklist } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
 import ConfirmationModal from "./ConfirmationModal";
+import i18n from "@/lib/i18n";
 
 const ProgressBar = ({ progress }) => (
   <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden transition-all duration-300">
@@ -71,7 +72,7 @@ const CardChecklist = ({
               <button
                 onClick={() => handleDeleteChecklistRequest(item.id)}
                 className="hidden group-hover:block text-red-300 hover:text-red-700 transition"
-                title="Delete checklist"
+                title={i18n.t("card.checklistDelete")}
               >
                 <FaTrash />
               </button>
@@ -107,7 +108,7 @@ const CardChecklist = ({
                   <button
                     onClick={() => deleteChecklistTask(item.id, task.id)}
                     className="hidden group-hover:block text-red-300 hover:text-red-700 transition"
-                    title="Delete task"
+                    title={i18n.t("card.checklistDeleteTask")}
                   >
                     <FaTrash />
                   </button>
@@ -118,7 +119,7 @@ const CardChecklist = ({
               className="text-xs text-violet-400 hover:underline transition"
               onClick={() => addChecklistTask(item.id)}
             >
-              + Add Item
+              + {i18n.t("card.checklistAddTask")}
             </button>
           </div>
         );
@@ -127,7 +128,7 @@ const CardChecklist = ({
         className="text-xs text-violet-400 hover:underline transition"
         onClick={addChecklist}
       >
-        + Add Checklist
+        + {i18n.t("card.checklistAdd")}
       </button>
 
       {deleteModalOpen && (
