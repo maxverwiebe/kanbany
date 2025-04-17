@@ -228,8 +228,8 @@ export default function CardModal() {
   if (!card) return null;
 
   const modalContainerClasses = isFullscreen
-    ? "bg-white p-6 rounded shadow-lg w-full h-full max-w-none max-h-none flex flex-col overflow-hidden"
-    : "bg-white p-6 rounded shadow-lg w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden";
+    ? "bg-white p-6 rounded shadow-lg w-full h-full max-w-none max-h-none flex flex-col overflow-hidden dark:bg-neutral-800"
+    : "bg-white p-6 rounded shadow-lg w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden dark:bg-neutral-800";
 
   const leftContainerRef = useRef(null);
   const leftContainerScrollRef = useRef(0);
@@ -253,7 +253,7 @@ export default function CardModal() {
         >
           <div className="mb-4">
             <input
-              className="w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400"
+              className="w-full bg-transparent placeholder:text-neutral-400 dark:text-neutral-200 dark:border-neutral-600 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400"
               placeholder={i18n.t("card.title")}
               defaultValue={title}
               onBlur={(e) => setTitle(e.target.value)}
@@ -261,12 +261,12 @@ export default function CardModal() {
           </div>
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-md font-semibold text-neutral-700">
+              <h3 className="text-md font-semibold text-neutral-700 dark:text-neutral-200">
                 {i18n.t("card.desc")}
               </h3>
               <button
                 onClick={() => setIsEditingDescription((prev) => !prev)}
-                className="px-3 py-1 text-xs border border-neutral-300 rounded hover:bg-violet-100 transition"
+                className="px-3 py-1 text-xs border border-neutral-300 rounded hover:bg-violet-100 transition dark:border-neutral-500 dark:text-neutral-500 dark:hover:bg-violet-900"
                 title="Toggle preview"
               >
                 {isEditingDescription ? "Edit" : "Preview"}
@@ -275,7 +275,7 @@ export default function CardModal() {
             {!isEditingDescription ? (
               <div
                 className={
-                  "relative p-2 border border-neutral-300 rounded-md cursor-text transition duration-200 hover:bg-neutral-50 " +
+                  "relative p-2 border border-neutral-300 rounded-md cursor-text transition duration-200 hover:bg-neutral-50 dark:text-neutral-200 dark:border-neutral-600 dark:hover:bg-neutral-700 " +
                   cardDescClasses
                 }
                 onClick={() => setIsEditingDescription(true)}
@@ -285,7 +285,7 @@ export default function CardModal() {
                     e.stopPropagation();
                     openDescFullscreen();
                   }}
-                  className="absolute top-2 right-2 p-1 text-xl text-neutral-300 hover:text-violet-500 transition"
+                  className="absolute top-2 right-2 p-1 text-xl text-neutral-300 hover:text-violet-500 transition dark:text-neutral-500"
                   title="Fullscreen editor"
                 >
                   <GrNewWindow />
@@ -295,7 +295,7 @@ export default function CardModal() {
             ) : (
               <textarea
                 className={
-                  "w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400 resize-y " +
+                  "w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400 resize-y dark:text-neutral-200 dark:border-neutral-600 " +
                   cardDescClasses
                 }
                 defaultValue={description}
@@ -320,23 +320,30 @@ export default function CardModal() {
         </div>
         <div className="w-full md:w-1/3 flex flex-col gap-4 overflow-y-auto">
           <div className="mb-4">
-            <h3 className="text-md font-semibold text-neutral-700 mb-2">
+            <h3 className="text-md font-semibold text-neutral-700 mb-2 dark:text-neutral-200">
               {i18n.t("card.column")}
             </h3>
             <select
-              className="w-full p-2 border border-neutral-300 rounded-md transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400"
+              className="w-full p-2 rounded-md transition duration-300 ease-in-out 
+             focus:outline-none focus:border-neutral-400 hover:border-neutral-400 
+             border-neutral-300 text-neutral-800 bg-white
+             dark:text-neutral-200 dark:border-neutral-600 dark:bg-neutral-800"
               value={columnID}
               onChange={(e) => setColumnID(e.target.value)}
             >
               {columns.map((col) => (
-                <option key={col.id} value={col.id}>
+                <option
+                  key={col.id}
+                  value={col.id}
+                  className="text-neutral-800 dark:text-neutral-200 dark:bg-neutral-800"
+                >
                   {col.title}
                 </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
-            <h3 className="text-md font-semibold text-neutral-700 mb-2">
+            <h3 className="text-md font-semibold text-neutral-700 mb-2 dark:text-neutral-200">
               {i18n.t("card.labels")}
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -369,7 +376,7 @@ export default function CardModal() {
       <div className="md:hidden flex flex-col flex-grow overflow-y-auto gap-4">
         <div>
           <input
-            className="w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400"
+            className="w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 dark:text-neutral-200 text-sm border border-neutral-300 dark:border-neutral-600 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500 hover:border-neutral-400"
             placeholder={i18n.t("card.title")}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -377,12 +384,12 @@ export default function CardModal() {
         </div>
         <div>
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-md font-semibold text-neutral-700">
+            <h3 className="text-md font-semibold text-neutral-700 dark:text-neutral-200">
               {i18n.t("card.desc")}
             </h3>
             <button
               onClick={() => setIsEditingDescription((prev) => !prev)}
-              className="px-3 py-1 text-xs border border-neutral-300 rounded hover:bg-violet-100 transition"
+              className="px-3 py-1 text-xs border border-neutral-300 dark:border-neutral-500 rounded hover:bg-violet-100 dark:text-neutral-500 dark:hover:bg-violet-900 transition"
               title="Toggle preview"
             >
               {isEditingDescription ? "Edit" : "Preview"}
@@ -391,7 +398,7 @@ export default function CardModal() {
           {!isEditingDescription ? (
             <div
               className={
-                "relative p-2 border border-neutral-300 rounded-md cursor-text transition duration-200 hover:bg-neutral-50 " +
+                "relative p-2 border border-neutral-300 dark:border-neutral-600 rounded-md cursor-text transition duration-200 hover:bg-neutral-50 dark:hover:bg-neutral-700 dark:text-neutral-200 " +
                 cardDescClasses
               }
               onClick={() => setIsEditingDescription(true)}
@@ -401,7 +408,7 @@ export default function CardModal() {
                   e.stopPropagation();
                   openDescFullscreen();
                 }}
-                className="absolute top-2 right-2 p-1 text-xl text-neutral-300 hover:text-violet-500 transition"
+                className="absolute top-2 right-2 p-1 text-xl text-neutral-300 dark:text-neutral-500 hover:text-violet-500 transition"
                 title="Fullscreen editor"
               >
                 <GrNewWindow />
@@ -411,7 +418,7 @@ export default function CardModal() {
           ) : (
             <textarea
               className={
-                "w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400 " +
+                "w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 dark:text-neutral-200 text-sm border border-neutral-300 dark:border-neutral-600 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500 hover:border-neutral-400 " +
                 cardDescClasses
               }
               defaultValue={description}
@@ -438,23 +445,27 @@ export default function CardModal() {
 
         <div>
           <div className="mb-4">
-            <h3 className="text-md font-semibold text-neutral-700 mb-2">
+            <h3 className="text-md font-semibold text-neutral-700 mb-2 dark:text-neutral-200">
               {i18n.t("card.column")}
             </h3>
             <select
-              className="w-full p-2 border border-neutral-300 rounded-md transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400"
+              className="w-full p-2 border border-neutral-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 rounded-md transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500 hover:border-neutral-400"
               value={columnID}
               onChange={(e) => setColumnID(e.target.value)}
             >
               {columns.map((col) => (
-                <option key={col.id} value={col.id}>
+                <option
+                  key={col.id}
+                  value={col.id}
+                  className="text-neutral-800 dark:text-neutral-200 dark:bg-neutral-800"
+                >
                   {col.title}
                 </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
-            <h3 className="text-md font-semibold text-neutral-700 mb-2">
+            <h3 className="text-md font-semibold text-neutral-700 mb-2 dark:text-neutral-200">
               {i18n.t("card.labels")}
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -487,7 +498,7 @@ export default function CardModal() {
       <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 px-4">
         <div className={modalContainerClasses}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-center">
+            <h2 className="text-xl font-semibold text-center dark:text-neutral-200">
               {i18n.t("card.editor")}
             </h2>
             <button
@@ -502,10 +513,10 @@ export default function CardModal() {
             <DesktopContent />
             <MobileContent />
           </div>
-          <div className="mt-4 border-t border-neutral-300 pt-4 flex items-center justify-between">
+          <div className="mt-4 border-t border-neutral-300 pt-4 flex items-center justify-between dark:border-neutral-600">
             <button
               onClick={() => setIsConfirmDeleteModalOpen(true)}
-              className="px-4 py-2 text-sm rounded-md hover:text-red-500 hover:bg-red-200 bg-gray-300 transition"
+              className="px-4 py-2 text-sm rounded-md hover:text-red-500 hover:bg-red-200 bg-gray-300 transition dark:bg-neutral-600 dark:text-neutral-200"
               title="Delete card"
             >
               Delete
@@ -513,7 +524,7 @@ export default function CardModal() {
             <div className="flex space-x-2">
               <button
                 onClick={handleCloseModal}
-                className="px-4 py-2 bg-gray-300 text-neutral-800 rounded-md text-sm hover:bg-gray-400 transition"
+                className="px-4 py-2 bg-gray-300 text-neutral-800 rounded-md text-sm hover:bg-gray-400 transition dark:bg-neutral-600 dark:hover:bg-neutral-500 dark:text-neutral-200"
               >
                 {i18n.t("general.close")}
               </button>
@@ -529,20 +540,22 @@ export default function CardModal() {
       </div>
       {isDescFullscreen && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-60 px-4">
-          <div className="bg-white p-6 rounded shadow-lg w-full h-full max-w-3xl overflow-y-auto flex flex-col">
+          <div className="bg-white p-6 rounded shadow-lg w-full h-full max-w-3xl overflow-y-auto flex flex-col dark:bg-neutral-800">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Edit Description</h3>
+              <h3 className="text-lg font-semibold text-neutral-200">
+                Edit Description
+              </h3>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setIsDescPreview((prev) => !prev)}
-                  className="px-3 py-1 text-xs border border-neutral-300 rounded hover:bg-violet-100 transition"
+                  className="px-3 py-1 text-xs border border-neutral-300 rounded hover:bg-violet-100 transition dark:border-neutral-500 dark:text-neutral-500 dark:hover:bg-violet-900"
                   title="Toggle preview"
                 >
                   {isDescPreview ? "Edit" : "Preview"}
                 </button>
                 <button
                   onClick={closeDescFullscreen}
-                  className="p-2 rounded hover:bg-violet-100 text-neutral-400 transition"
+                  className="p-2 rounded hover:bg-violet-100 text-neutral-400 transition dark:hover:bg-violet-950"
                   title="Close fullscreen editor"
                 >
                   X
@@ -550,12 +563,12 @@ export default function CardModal() {
               </div>
             </div>
             {isDescPreview ? (
-              <div className="flex-grow p-3 border border-neutral-300 rounded overflow-y-auto">
+              <div className="flex-grow p-3 border border-neutral-300 rounded overflow-y-auto dark:text-neutral-200 dark:border-neutral-600">
                 <MarkdownRenderer text={fullscreenDesc} />
               </div>
             ) : (
               <textarea
-                className="w-full flex-grow bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400"
+                className="w-full h-full bg-transparent placeholder:text-neutral-400 text-neutral-800 text-sm border border-neutral-300 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 hover:border-neutral-400 resize-y dark:text-neutral-200 dark:border-neutral-600"
                 value={fullscreenDesc}
                 onChange={(e) => setFullscreenDesc(e.target.value)}
                 autoFocus
@@ -564,7 +577,7 @@ export default function CardModal() {
             <div className="flex justify-end mt-4">
               <button
                 onClick={closeDescFullscreen}
-                className="px-4 py-2 bg-gray-300 text-neutral-800 rounded-md text-sm hover:bg-gray-400 transition mr-2"
+                className="px-4 py-2 bg-gray-300 text-neutral-800 rounded-md text-sm hover:bg-gray-400 transition mr-2 dark:bg-neutral-600 dark:hover:bg-neutral-500 dark:text-neutral-200"
               >
                 Cancel
               </button>

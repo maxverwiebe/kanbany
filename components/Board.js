@@ -125,13 +125,15 @@ export default function Board() {
   }, []);
 
   return (
-    <div className="flex flex-col bg-white dark:bg-gray-900">
+    <div className="flex flex-col bg-white dark:bg-neutral-900">
       <div>
         <div className="relative inline-block mb-4">
-          <div className="flex items-center justify-between px-4 py-2 bg-gray-100 shadow-md rounded-md">
-            <h1 className="text-xl font-bold text-gray-800">KANBANY</h1>
+          <div className="flex items-center justify-between px-4 py-2 bg-gray-100 shadow-md rounded-md dark:bg-neutral-800">
+            <h1 className="text-xl font-bold text-gray-800 dark:text-neutral-200">
+              KANBANY
+            </h1>
             <button
-              className="flex items-center justify-center w-10 h-10 text-violet-500 hover:bg-violet-100 rounded-full transition ml-4"
+              className="flex items-center justify-center w-10 h-10 text-violet-500 dark:text-violet-300 hover:bg-violet-100  dark:hover:bg-violet-900 rounded-full transition ml-4"
               onClick={toggleDropdown}
             >
               <svg
@@ -152,21 +154,21 @@ export default function Board() {
           </div>
 
           {showDropdown && (
-            <div className="absolute mt-2 w-48 rounded drop-shadow-lg bg-neutral-50 text-neutral-700 z-10">
+            <div className="absolute mt-2 w-48 rounded drop-shadow-lg bg-neutral-50 text-neutral-700 z-10 dark:bg-neutral-800">
               <button
-                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded"
+                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded dark:text-neutral-200 dark:hover:bg-violet-950"
                 onClick={handleOpenColManager}
               >
                 {i18n.t("column.manage")}
               </button>
               <button
-                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded"
+                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded dark:text-neutral-200 dark:hover:bg-violet-950"
                 onClick={handleOpenLabelManager}
               >
                 {i18n.t("label.manage")}
               </button>
               <div className="h-5"></div>
-              <div className="w-full text-left px-4 py-2 hover:bg-violet-100 flex justify-between items-center">
+              <div className="w-full text-left px-4 py-2 hover:bg-violet-100 flex justify-between items-center dark:text-neutral-200 dark:hover:bg-violet-950">
                 <span>{i18n.t("general.darkMode")}</span>
                 <ToggleSwitch
                   initial={isDarkMode}
@@ -175,7 +177,7 @@ export default function Board() {
               </div>
               <div className="h-5"></div>
               <button
-                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded"
+                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded dark:text-neutral-200 dark:hover:bg-violet-950"
                 onClick={handleFileExport}
               >
                 {i18n.t("data.export")}
@@ -188,7 +190,7 @@ export default function Board() {
                 onChange={handleFileChange}
               />
               <button
-                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded"
+                className="w-full text-left px-4 py-2 hover:bg-violet-100 rounded dark:text-neutral-200 dark:hover:bg-violet-950"
                 onClick={() => document.getElementById("jsonFileInput").click()}
               >
                 {i18n.t("data.import")}
@@ -211,7 +213,7 @@ export default function Board() {
             <div className="group">
               <div className="flex-shrink-0 w-64 h-full bg-gray-100/0 p-4 rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 <button
-                  className="flex items-center justify-center w-full h-full text-violet-500 hover:bg-violet-100 rounded transition"
+                  className="flex items-center justify-center w-full h-full text-violet-500 hover:bg-violet-100 rounded transition dark:hover:bg-violet-950"
                   onClick={() => {
                     setShowColManager(true);
                   }}

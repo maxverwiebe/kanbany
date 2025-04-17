@@ -32,7 +32,7 @@ export default function Card({ card }) {
 
   return (
     <div
-      className="bg-white p-2 mb-2 rounded shadow cursor-pointer w-full"
+      className="bg-white p-2 mb-2 rounded shadow cursor-pointer w-full dark:bg-neutral-700 dark:text-neutral-200"
       draggable
       onClick={() => openModal(card.id)}
       onDragStart={(e) => onDragStart(e, card.id)}
@@ -44,12 +44,12 @@ export default function Card({ card }) {
 
       <div className="flex">
         {card.description && (
-          <MdFormatAlignLeft className="text-gray-400 text-lg mt-1 mr-2" />
+          <MdFormatAlignLeft className="text-gray-400 text-lg mt-1 mr-2 dark:text-neutral-400" />
         )}
         {checklistProgress && (
-          <div className="flex items-center text-xs text-gray-500 mt-1">
+          <div className="flex items-center text-xs text-gray-500 mt-1 dark:text-neutral-400">
             <span>{checklistProgress}</span>
-            <MdOutlineCheckBox className="ml-1 text-lg text-gray-400" />
+            <MdOutlineCheckBox className="ml-1 text-lg text-gray-400 dark:text-neutral-400" />
           </div>
         )}
       </div>

@@ -5,7 +5,7 @@ import ConfirmationModal from "./ConfirmationModal";
 import i18n from "@/lib/i18n";
 
 const ProgressBar = ({ progress }) => (
-  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden transition-all duration-300">
+  <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-2.5 overflow-hidden transition-all duration-300">
     <div
       className="bg-violet-500 h-full rounded-full transition-all duration-300"
       style={{ width: `${progress}%` }}
@@ -61,24 +61,25 @@ const CardChecklist = ({
         return (
           <div key={item.id} className="space-y-4 pb-4">
             <div className="flex items-center gap-2 justify-between group">
-              <div className="flex items-center gap-2">
-                <MdChecklist className="text-2xl" />
+              <div className="flex items-center gap-2 w-full">
+                <MdChecklist className="text-2xl text-neutral-700 dark:text-neutral-200" />
                 <input
-                  className="text-md font-semibold border-b border-transparent focus:border-violet-500 outline-none transition-colors duration-300 w-full"
+                  className="text-md font-semibold bg-transparent border-b border-transparent focus:border-violet-500 outline-none transition-colors duration-300 w-full 
+                             text-neutral-800 dark:text-neutral-200 dark:focus:border-violet-400 dark:border-transparent"
                   defaultValue={item.text}
                   onBlur={(e) => renameChecklist(item.id, e.target.value)}
                 />
               </div>
               <button
                 onClick={() => handleDeleteChecklistRequest(item.id)}
-                className="hidden group-hover:block text-red-300 hover:text-red-700 transition"
+                className="hidden group-hover:block text-red-300 hover:text-red-700 dark:hover:text-red-400 transition"
                 title={i18n.t("card.checklistDelete")}
               >
                 <FaTrash />
               </button>
             </div>
             <div className="flex items-center gap-3 mr-4">
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-sm font-medium text-gray-600 dark:text-neutral-400">
                 {Math.round(progress)}%
               </p>
               <ProgressBar progress={progress} />
@@ -98,7 +99,8 @@ const CardChecklist = ({
                     />
                     <input
                       type="text"
-                      className="text-sm border-b border-transparent focus:border-violet-500 outline-none transition-colors duration-300 w-full"
+                      className="text-sm bg-transparent border-b border-transparent focus:border-violet-500 outline-none transition-colors duration-300 w-full 
+                                 text-neutral-800 dark:text-neutral-200 dark:focus:border-violet-400 dark:border-transparent"
                       defaultValue={task.text}
                       onBlur={(e) =>
                         renameChecklistTask(item.id, task.id, e.target.value)
@@ -107,7 +109,7 @@ const CardChecklist = ({
                   </div>
                   <button
                     onClick={() => deleteChecklistTask(item.id, task.id)}
-                    className="hidden group-hover:block text-red-300 hover:text-red-700 transition"
+                    className="hidden group-hover:block text-red-300 hover:text-red-700 dark:hover:text-red-400 transition"
                     title={i18n.t("card.checklistDeleteTask")}
                   >
                     <FaTrash />
@@ -116,7 +118,7 @@ const CardChecklist = ({
               ))}
             </ul>
             <button
-              className="text-xs text-violet-400 hover:underline transition"
+              className="text-xs text-violet-500 hover:underline transition dark:text-violet-400"
               onClick={() => addChecklistTask(item.id)}
             >
               + {i18n.t("card.checklistAddTask")}
@@ -125,7 +127,7 @@ const CardChecklist = ({
         );
       })}
       <button
-        className="text-xs text-violet-400 hover:underline transition"
+        className="text-xs text-violet-500 hover:underline transition dark:text-violet-400"
         onClick={addChecklist}
       >
         + {i18n.t("card.checklistAdd")}

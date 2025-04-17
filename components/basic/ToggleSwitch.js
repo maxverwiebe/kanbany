@@ -22,11 +22,11 @@ export default function ToggleSwitch({ label, initial = false, onToggle }) {
         />
         <div
           className={`w-10 h-4 rounded-full shadow-inner ${
-            checked ? "bg-violet-300" : "bg-gray-300"
+            checked ? "bg-violet-300 dark:bg-violet-600" : "bg-gray-300"
           }`}
         />
         <div
-          className={`dot absolute w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 transform -left-1 -top-1 ${
+          className={`dot absolute w-6 h-6 bg-white dark:bg-neutral-300 rounded-full shadow transition-transform duration-300 transform -left-1 -top-1 ${
             checked ? "translate-x-6" : "translate-x-0"
           }`}
         />
