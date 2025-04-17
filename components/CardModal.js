@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, memo } from "react";
 import { useBoard } from "@/lib/BoardContext";
 import i18n from "@/lib/i18n";
-import { useToast } from "@/lib/ToastContext";
+import { addToast } from "@/lib/Toast";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
 import { GrNewWindow } from "react-icons/gr";
@@ -25,7 +25,6 @@ export default function CardModal() {
   const [description, setDescription] = useState(card?.description || "");
   const [selectedLabels, setSelectedLabels] = useState(card?.labels || []);
   const [columnID, setColumnID] = useState(card?.columnId || "");
-  const { addToast } = useToast();
 
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
@@ -35,6 +34,8 @@ export default function CardModal() {
   const [isDescPreview, setIsDescPreview] = useState(false);
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] =
+    useState(false);
 
   const [originalData, setOriginalData] = useState(null);
 
@@ -43,8 +44,8 @@ export default function CardModal() {
   const addChecklist = () => {
     const newItem = {
       id: checklist.length + 1,
-      text: `Checkliste ${checklist.length + 1}`,
-      tasks: [{ id: 1, text: "Neue Aufgabe", completed: false }],
+      text: `${i18n.t("card.checklist")} ${checklist.length + 1}`,
+      tasks: [{ id: 1, text: "New Task", completed: false }],
     };
     setChecklist((prev) => [...prev, newItem]);
   };
@@ -76,7 +77,7 @@ export default function CardModal() {
                 ...item.tasks,
                 {
                   id: item.tasks.length + 1,
-                  text: "Neue Aufgabe",
+                  text: "New Task",
                   completed: false,
                 },
               ],
@@ -503,11 +504,11 @@ export default function CardModal() {
           </div>
           <div className="mt-4 border-t border-neutral-300 pt-4 flex items-center justify-between">
             <button
-              onClick={handleDelete}
-              className="px-3 py-1 text-2xl text-red-500 rounded bg-red-100 hover:bg-red-200 transition"
+              onClick={() => setIsConfirmDeleteModalOpen(true)}
+              className="px-4 py-2 text-sm rounded-md hover:text-red-500 hover:bg-red-200 bg-gray-300 transition"
               title="Delete card"
             >
-              <MdDeleteOutline />
+              Delete
             </button>
             <div className="flex space-x-2">
               <button
@@ -579,12 +580,22 @@ export default function CardModal() {
       )}
       {isConfirmModalOpen && (
         <ConfirmationModal
-          title="Unsaved Changes"
-          message="You have unsaved changes. Are you sure you want to close the menu?"
-          confirmText="Close anyway"
-          cancelText="Cancel"
+          title={i18n.t("card.modalConfirmUnsavedChanges")}
+          message={i18n.t("card.modalConfirmUnsavedChangesDetails")}
+          confirmText={i18n.t("card.modalConfirmUnsavedChangesYes")}
+          cancelText={i18n.t("card.modalConfirmUnsavedChangesNo")}
           onConfirm={handleConfirmClose}
           onCancel={handleCancelClose}
+        />
+      )}
+      {isConfirmDeleteModalOpen && (
+        <ConfirmationModal
+          title={i18n.t("card.modalConfirmDelete")}
+          message={i18n.t("card.modalConfirmDeleteDetails")}
+          confirmText={i18n.t("card.modalConfirmDeleteYes")}
+          cancelText={i18n.t("card.modalConfirmDeleteNo")}
+          onConfirm={handleDelete}
+          onCancel={() => setIsConfirmDeleteModalOpen(false)}
         />
       )}
     </>
