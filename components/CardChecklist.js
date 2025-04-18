@@ -22,7 +22,7 @@ const CustomCheckbox = ({ checked, onToggle }) => (
 );
 
 const ProgressBar = ({ progress }) => (
-  <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-2.5 overflow-hidden transition-all duration-300">
+  <div className="w-full bg-gray-200 dark:bg-neutral-700 rounded-full h-1.5 overflow-hidden transition-all duration-300">
     <div
       className="bg-violet-500 h-full rounded-full transition-all duration-300"
       style={{ width: `${progress}%` }}
@@ -72,7 +72,7 @@ const CardChecklist = ({
       {checklist?.map((item) => {
         const progress = calculateProgress(item.id);
         return (
-          <div key={item.id} className="space-y-4 pb-4">
+          <div key={item.id} className="space-y-2">
             <div className="flex items-center justify-between group">
               <div className="flex items-center gap-2 w-full">
                 <MdChecklist className="text-2xl text-neutral-700 dark:text-neutral-200" />
@@ -111,7 +111,11 @@ const CardChecklist = ({
                     />
                     <input
                       type="text"
-                      className="text-sm bg-transparent border-b border-transparent focus:border-violet-500 outline-none transition-colors duration-300 w-full text-neutral-800 dark:text-neutral-200 dark:focus:border-violet-400"
+                      className={`text-sm bg-transparent border-b border-transparent focus:border-violet-500 outline-none transition-colors duration-300 w-full text-neutral-800 dark:text-neutral-200 dark:focus:border-violet-400 ${
+                        task.completed
+                          ? "line-through text-neutral-400 dark:text-neutral-500"
+                          : ""
+                      }`}
                       defaultValue={task.text}
                       onBlur={(e) =>
                         renameChecklistTask(item.id, task.id, e.target.value)
