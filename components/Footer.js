@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="w-full mb-4 text-center text-neutral-400 text-sm dark:text-neutral-500">
+    <footer className="w-full mb-4 text-center text-neutral-400 text-sm dark:text-neutral-500 px-2">
       <p className="flex flex-wrap justify-center items-center gap-2">
         <span>Data is stored in Local Storage.</span>
         <span className="text-neutral-400 dark:text-neutral-600">|</span>
