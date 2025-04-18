@@ -45,9 +45,9 @@ export default function ToastContainer() {
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="flex items-center px-4 py-2 rounded shadow-md text-neutral-700 bg-gray-100 transition duration-700"
+          className="flex items-center px-4 py-2 rounded shadow-md text-neutral-700 bg-gray-100 dark:bg-neutral-700 dark:text-neutral-200 transition duration-700"
         >
-          <ToastIcon toastType={toast.type}></ToastIcon>
+          <ToastIcon toastType={toast.type} />
           <span>{toast.message}</span>
         </div>
       ))}
