@@ -378,8 +378,8 @@ export default function CardModal() {
           <input
             className="w-full bg-transparent placeholder:text-neutral-400 text-neutral-800 dark:text-neutral-200 text-sm border border-neutral-300 dark:border-neutral-600 rounded-md px-3 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500 hover:border-neutral-400"
             placeholder={i18n.t("card.title")}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            defaultValue={title}
+            onBlur={(e) => setTitle(e.target.value)}
           />
         </div>
         <div>
