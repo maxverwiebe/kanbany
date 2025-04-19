@@ -539,20 +539,13 @@ export default function CardModal() {
         </div>
       </div>
       {isDescFullscreen && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-60 px-4">
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-60 px-4">
           <div className="bg-white p-6 rounded shadow-lg w-full h-full max-w-3xl overflow-y-auto flex flex-col dark:bg-neutral-800">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-neutral-200">
+              <h3 className="text-lg font-semibold dark:text-neutral-200">
                 Edit Description
               </h3>
               <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setIsDescPreview((prev) => !prev)}
-                  className="px-3 py-1 text-xs border border-neutral-300 rounded hover:bg-violet-100 transition dark:border-neutral-500 dark:text-neutral-500 dark:hover:bg-violet-900"
-                  title="Toggle preview"
-                >
-                  {isDescPreview ? "Edit" : "Preview"}
-                </button>
                 <button
                   onClick={closeDescFullscreen}
                   className="p-2 rounded hover:bg-violet-100 text-neutral-400 transition dark:hover:bg-violet-950"
@@ -575,6 +568,12 @@ export default function CardModal() {
               />
             )}
             <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setIsDescPreview((prev) => !prev)}
+                className="px-4 py-2 mr-4 bg-gray-300 text-neutral-800 rounded-md text-sm hover:bg-gray-400 transition mr-2 dark:bg-neutral-600 dark:hover:bg-neutral-500 dark:text-neutral-200"
+              >
+                {isDescPreview ? "Edit" : "Show Preview"}
+              </button>
               <button
                 onClick={closeDescFullscreen}
                 className="px-4 py-2 bg-gray-300 text-neutral-800 rounded-md text-sm hover:bg-gray-400 transition mr-2 dark:bg-neutral-600 dark:hover:bg-neutral-500 dark:text-neutral-200"
