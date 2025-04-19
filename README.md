@@ -4,9 +4,6 @@
   <a href="https://kanbany.vercel.app">
     <img src="https://img.shields.io/badge/demo-live-blue?logo=vercel" alt="Live Demo" />
   </a>
-  <a href="https://github.com/maxverwiebe/kanbany/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/maxverwiebe/kanbany/ci.yml?branch=main&logo=github" alt="CI status" />
-  </a>
   <a href="https://github.com/maxverwiebe/kanbany/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/maxverwiebe/kanbany" alt="MIT License" />
   </a>
@@ -35,11 +32,14 @@ Kanbany is a minimalist Trello-clone and Kanban board built with React and Next.
 
 ## 📸 Screenshots
 
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/e143f261-6a84-4c2c-941d-ceaf6ec99f5b" />
+<img width="829" alt="image" src="https://github.com/user-attachments/assets/4e521693-3b48-4653-b801-8d4d24c7ab0e" />
+
+
 <details>
-  <summary>Card Editor</summary>
+  <summary>Card View / Editor</summary>
   
-  ![Card Modal](https://github.com/user-attachments/assets/021e31a6-0743-4f02-809c-95ee96f4a9d3)
+  <img width="764" alt="image" src="https://github.com/user-attachments/assets/28cd5e80-3929-4d55-a8a3-04fb7b7c09d7" />
+
   
 </details>
 
@@ -62,6 +62,13 @@ Kanbany is a minimalist Trello-clone and Kanban board built with React and Next.
   
   ![Responsive View](https://github.com/user-attachments/assets/993c5126-bb57-466d-b1b7-f8171539ba53)
   </details>
+
+<details>
+  <summary>Dark Mode</summary>
+  
+  <img width="823" alt="image" src="https://github.com/user-attachments/assets/1e8e40b9-7c59-42d4-9c1b-7e46b68822fc" />
+
+</details>
 
 ## Features
 
