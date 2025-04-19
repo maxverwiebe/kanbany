@@ -1,5 +1,6 @@
 import Labels from "./Labels";
 import { useBoard } from "@/lib/BoardContext";
+import { MdOutlineCheckBox, MdFormatAlignLeft } from "react-icons/md";
 
 export default function Card({ card }) {
   const { openModal, onDragStart, onDragEnd } = useBoard();
@@ -10,9 +11,28 @@ export default function Card({ card }) {
     return text.substring(0, maxLength) + "...";
   };
 
+  const calculateChecklistProgress = () => {
+    const checklistArray = card?.checklist;
+    if (!checklistArray || !Array.isArray(checklistArray)) return false;
+
+    let total = 0;
+    let completed = 0;
+
+    checklistArray.forEach((list) => {
+      if (list && Array.isArray(list.tasks)) {
+        total += list.tasks.length;
+        completed += list.tasks.filter((task) => task.completed).length;
+      }
+    });
+
+    return total === 0 ? false : `${completed}/${total}`;
+  };
+
+  const checklistProgress = calculateChecklistProgress();
+
   return (
     <div
-      className="bg-white p-2 mb-2 rounded shadow cursor-pointer w-full"
+      className="bg-white p-2 mb-2 rounded shadow cursor-pointer w-full dark:bg-neutral-700 dark:text-neutral-200"
       draggable
       onClick={() => openModal(card.id)}
       onDragStart={(e) => onDragStart(e, card.id)}
@@ -22,11 +42,17 @@ export default function Card({ card }) {
       <h3 className="font-medium">{truncateText(card.text, 25)}</h3>
       <Labels labelIds={card.labels} />
 
-      {card.description && (
-        <p className="text-xs text-gray-500">
-          {truncateText(card.description, 50)}
-        </p>
-      )}
+      <div className="flex">
+        {card.description && (
+          <MdFormatAlignLeft className="text-gray-400 text-lg mt-1 mr-2 dark:text-neutral-400" />
+        )}
+        {checklistProgress && (
+          <div className="flex items-center text-xs text-gray-500 mt-1 dark:text-neutral-400">
+            <span>{checklistProgress}</span>
+            <MdOutlineCheckBox className="ml-1 text-lg text-gray-400 dark:text-neutral-400" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,17 +1,45 @@
-<div align="center"><img width="350" alt="image" src="https://github.com/user-attachments/assets/d2e439ae-8161-4ce8-8c40-7e8e882d95b1" href="kanbany.vercel.app" />
+  <div align="center"><img width="350" alt="image" src="https://github.com/user-attachments/assets/d2e439ae-8161-4ce8-8c40-7e8e882d95b1" href="kanbany.vercel.app" /></div>
 
+<p align="center">
+  <a href="https://kanbany.vercel.app">
+    <img src="https://img.shields.io/badge/demo-live-blue?logo=vercel" alt="Live Demo" />
+  </a>
+  <a href="https://github.com/maxverwiebe/kanbany/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/maxverwiebe/kanbany" alt="MIT License" />
+  </a>
+  <a href="https://github.com/maxverwiebe/kanbany/stargazers">
+    <img src="https://img.shields.io/github/stars/maxverwiebe/kanbany?style=social" alt="GitHub stars" />
+  </a>
+</p>
 
-Check the deployed web-app: [kanbany.vercel.app](https://kanbany.vercel.app)</div>
-
-# Kanbany
-
-Kanbany is a minimalist Trello clone and Kanban board application built with React and Next.js. Organize your tasks with an intuitive drag-and-drop interface and manage your board entirely in your browser thanks to local storage persistence.
-
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/e143f261-6a84-4c2c-941d-ceaf6ec99f5b" />
 <details>
-  <summary>Card Editor</summary>
+  <summary><strong>🚀 Table of Contents</strong></summary>
+
+- [About](#about)
+- [Features](#features)
+- [Demo](#demo)
+- [Screenshots](#screenshots)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Technologies](#technologies)
+- [Contributing](#contributing)
+
+</details>
+
+## 🎯 About
+
+Kanbany is a minimalist Trello-clone and Kanban board built with React and Next.js. Organize tasks via an intuitive drag-and-drop interface, with full state persistence using the browser's local storage.
+
+## 📸 Screenshots
+
+<img width="829" alt="image" src="https://github.com/user-attachments/assets/4e521693-3b48-4653-b801-8d4d24c7ab0e" />
+
+
+<details>
+  <summary>Card View / Editor</summary>
   
-  ![Card Modal](https://github.com/user-attachments/assets/021e31a6-0743-4f02-809c-95ee96f4a9d3)
+  <img width="764" alt="image" src="https://github.com/user-attachments/assets/28cd5e80-3929-4d55-a8a3-04fb7b7c09d7" />
+
   
 </details>
 
@@ -35,65 +63,74 @@ Kanbany is a minimalist Trello clone and Kanban board application built with Rea
   ![Responsive View](https://github.com/user-attachments/assets/993c5126-bb57-466d-b1b7-f8171539ba53)
   </details>
 
+<details>
+  <summary>Dark Mode</summary>
+  
+  <img width="823" alt="image" src="https://github.com/user-attachments/assets/1e8e40b9-7c59-42d4-9c1b-7e46b68822fc" />
+
+</details>
+
 ## Features
 
-- **Drag & Drop**
-  - Easily move cards between columns with smooth drag-and-drop interactions.
-- **Local Data Storage**
-  - All board data is stored locally in your browser, ensuring your work is saved between sessions.
-- **Label Management**
-  - Assign and manage custom labels to classify your tasks.
-- **Column Management**
-  - Add, remove, and reorder columns to tailor your workflow.
-- **Responsive Design**
-  - Enjoy a clean, modern UI that adapts to your device.
+- **Drag & Drop**: Smooth card movement between columns.
+- **Persistent Storage**: Automatic saving to Local Storage.
+- **Custom Labels**: Create, assign, and manage labels for tasks.
+- **Column Management**: Add, remove, and reorder columns.
+- **Dark Mode**: Switch between light and dark themes for comfortable viewing.
+- **Card Checklists**: Break tasks into smaller steps and track progress.
+- **Responsive Design**: Mobile-friendly and adapts to any screen size.
+- **Data Import/Export**: Backup or transfer your board via JSON.
 
-## Installation
+## 🔗 Demo
 
-1. **Clone the repository:**
+Try it live at [kanbany.vercel.app](https://kanbany.vercel.app).
 
-   ```bash
-   git clone https://github.com/maxverwiebe/kanbany.git
-   ```
+## 🏗️ Getting Started
 
-2. **Navigate to the project directory:**
+### Prerequisites
 
-   ```bash
-   cd kanbany
-   ```
+- [Node.js](https://nodejs.org/) v14+
+- npm or Yarn
 
-3. **Install dependencies:**
+### Installation
 
-   ```bash
-   npm install
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/maxverwiebe/kanbany.git
+cd kanbany
 
-4. **Run the development server:**
+# Install dependencies
+npm install  # or yarn install
 
-   ```bash
-   npm run dev
-   ```
+# Start development server
+npm run dev  # or yarn dev
+```
 
-   Open [http://localhost:3000](http://localhost:3000) in your browser to see Kanbany in action!
+Visit `http://localhost:3000` to view the app locally.
 
-## Usage
+## 💡 Usage
 
-- **Editing Cards:** Click on any card to open a modal where you can update the task title, description, assign labels, and change its column.
-- **Creating Cards:** Use the "+ Add" button within each column to quickly add new cards.
-- **Managing Columns & Labels:** Access the dropdown menu in the header to open the column or label management modals.
-- **Data Portability:** Export your board data to a JSON file and import it later to restore your board state or share it. But don't worry, your data is also being stored in your local storage automatically!
+- **Add Cards**: Click **+** in any column.
+- **Edit Cards**: Click a card to open the editor modal, update details, labels, or move it.
+- **Move via. Drag and Drop**: Easily move cards with Drag and Drop.
+- **Manage Columns & Labels**: Access the menu icon in the header.
+- **Export/Import Data**: Use the menu to download/upload JSON backups. But don't worry, your data is automatically saved to the LocalStorage of your Browser.
 
-## Technologies Used
+## 🛠️ Technologies
 
-- **React & Next.js:** For building a dynamic, server-rendered web application.
-- **Tailwind CSS:** For rapid UI development and responsive design.
-- **Local Storage:** To maintain your board data across sessions.
-- **React Context API:** For managing state across the application.
+- **React** & **Next.js**
+- **Tailwind CSS**
+- **Local Storage** for persistence
+- **React Context API** for global state
+- **React Icons** for icons lol
+- **marked** for Markdown integration in the description field
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are **VERY** welcome! Feel free to fork the repository and submit pull requests with improvements or new features.
+Contributions are welcome! Please:
 
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -m "feat: Your feature"`)
+4. Push to branch (`git push origin feature/YourFeature`)
+5. Open a Pull Request

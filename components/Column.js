@@ -25,20 +25,22 @@ export default function Column({ column }) {
 
   return (
     <div
-      className="bg-gray-100 p-4 rounded flex flex-col min-w-64 max-w-160 shadow-md overflow-visible"
+      className="bg-gray-100 p-4 rounded-md flex flex-col min-w-64 max-w-160 shadow-md overflow-visible dark:bg-neutral-800"
       onDrop={(e) => onDrop(e, column.id)}
       onDragOver={(e) => e.preventDefault()}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2 group">
-          <h2 className="font-semibold">{column.title}</h2>
-          <div className="hidden group-hover:flex items-center bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full transition-all duration-200">
+          <h2 className="font-semibold dark:text-neutral-200">
+            {column.title}
+          </h2>
+          <div className="hidden group-hover:flex items-center bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full transition-all duration-200 dark:text-neutral-200 dark:bg-neutral-700">
             <FaRegStickyNote className="mr-1" />
             <span>{cardCount}</span>
           </div>
         </div>
         <button
-          className="text-2xl px-2 text-violet-500 hover:bg-violet-100 rounded-full"
+          className="text-2xl px-2 text-violet-500 hover:bg-violet-100 rounded-full dark:hover:bg-violet-900 dark:text-violet-300"
           onClick={addCardInColumn}
         >
           +
