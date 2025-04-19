@@ -29,18 +29,28 @@
     },
     "column": {
         "add": "Add column",
+        "edit": "Edit column",
+        "title": "Title",
         "manage": "Manage columns",
         "manager": "Column Manager",
-        "new": "New column title"
+        "new": "New column title",
+        "toastUpdated": "Updated column {{name}}!",
+        "toastCreated": "Created column {{name}}!",
+        "toastDeleted": "Deleted column {{name}}!",
+        "empty": "No columns yet :(",
+        "newPlaceholder": "Column title here"
     },
     "label": {
         "add": "Add label",
         "manage": "Manage labels",
         "manager": "Label Manager",
-        "title": "Label title",
+        "title": "Title",
         "empty": "No labels yet :(",
         "toastSuccessfullyCreated": "Created label {{name}}!",
-        "toastSuccessfullyDeleted": "Deleted label {{name}}!"
+        "toastSuccessfullyUpdated": "Updated label {{name}}!",
+        "toastSuccessfullyDeleted": "Deleted label {{name}}!",
+        "titlePlaceholder": "Label title here",
+        "color": "Color"
     },
     "data": {
         "toastImportSuccessLS": "Automatically imported from local storage!",

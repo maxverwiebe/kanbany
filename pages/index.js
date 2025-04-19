@@ -1,6 +1,6 @@
 // pages/index.js
 import Head from "next/head";
-import Board from "../components/Board";
+import Board from "../components/board/Board";
 import { BoardProvider } from "@/lib/BoardContext";
 import Footer from "@/components/Footer";
 
