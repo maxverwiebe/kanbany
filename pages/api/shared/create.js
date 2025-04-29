@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 import pool from "@/lib/Database";
 import bcrypt from "bcrypt";
+import RateLimiter from "@/lib/RateLimiter";
 
 const limiter = new RateLimiter({ windowMs: 60_000, max: 2 });
 
