@@ -12,6 +12,8 @@ import {
   MdDragHandle,
 } from "react-icons/md";
 
+import { BiColumns } from "react-icons/bi";
+
 export default function ColumnManagerModal({ onClose }) {
   const { columns, setColumns, addColumn } = useBoard();
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -92,9 +94,10 @@ export default function ColumnManagerModal({ onClose }) {
         className={`${modalWrapperClasses} bg-white dark:bg-neutral-800 rounded shadow-lg p-6 flex flex-col`}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-200">
-            {i18n.t("column.manager")}
-          </h2>
+          <div className="flex items-center space-x-2 text-violet-600 dark:text-violet-400">
+            <BiColumns size={24} />
+            <h2 className="text-xl font-semibold">Column Manager</h2>
+          </div>
           <button
             onClick={toggleFullscreen}
             className="p-2 rounded hover:bg-violet-100 dark:hover:bg-violet-900 text-neutral-400 dark:text-neutral-500 font-thin text-2xl transition"

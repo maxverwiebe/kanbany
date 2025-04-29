@@ -60,5 +60,20 @@
         "toastExportError": "Export failed!",
         "export": "Export as JSON",
         "import": "Import from JSON"
+    },
+    "board": {
+        "loaded": "Board loaded!",
+        "passwordWrong": "Wrong password!",
+        "serverSavingError": "Error saving to server! {{error}}",
+        "copyLink": "Copy link",
+        "copyLinkSuccess": "Link copied to clipboard!"
+
+    },
+    "socket": {
+        "connected": "Connected to server!",
+        "disconnected": "Disconnected from server!",
+        "reconnecting": "Reconnecting to server...",
+        "reconnected": "Reconnected to server!",
+        "error": "Socket Error"
     }
 }

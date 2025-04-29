@@ -8,6 +8,7 @@ import { GrNewWindow } from "react-icons/gr";
 import { MdDeleteOutline } from "react-icons/md";
 import CardChecklist from "./CardChecklist";
 import ConfirmationModal from "./ConfirmationModal";
+import { BiCard } from "react-icons/bi";
 
 export default function CardModal() {
   const {
@@ -264,6 +265,7 @@ export default function CardModal() {
               <h3 className="text-md font-semibold text-neutral-700 dark:text-neutral-200">
                 {i18n.t("card.desc")}
               </h3>
+
               <button
                 onClick={() => setIsEditingDescription((prev) => !prev)}
                 className="px-3 py-1 text-xs border border-neutral-300 rounded hover:bg-violet-100 transition dark:border-neutral-500 dark:text-neutral-500 dark:hover:bg-violet-900"
@@ -498,9 +500,10 @@ export default function CardModal() {
       <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center z-50 px-4">
         <div className={modalContainerClasses}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-center dark:text-neutral-200">
-              {i18n.t("card.editor")}
-            </h2>
+            <div className="flex items-center space-x-2 text-violet-600 dark:text-violet-400">
+              <BiCard size={24} />
+              <h2 className="text-xl font-semibold">{i18n.t("card.editor")}</h2>
+            </div>
             <button
               onClick={toggleFullscreen}
               className="p-2 rounded hover:bg-violet-100 text-neutral-400 font-thin text-2xl transition"

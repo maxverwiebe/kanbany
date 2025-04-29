@@ -3,6 +3,7 @@ import { useBoard } from "@/lib/BoardContext";
 import i18n from "@/lib/i18n";
 import { addToast } from "@/lib/Toast";
 import { MdFullscreen, MdFullscreenExit, MdAdd } from "react-icons/md";
+import { BiSolidLabel } from "react-icons/bi";
 
 const COLORS = [
   "bg-red-500",
@@ -83,9 +84,10 @@ export default function LabelManagerModal({ onClose }) {
         className={`${modalWrapperClasses} bg-white dark:bg-neutral-800 rounded shadow-lg p-6 flex flex-col`}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-200">
-            {i18n.t("label.manager")}
-          </h2>
+          <div className="flex items-center space-x-2 text-violet-600 dark:text-violet-400">
+            <BiSolidLabel size={24} />
+            <h2 className="text-xl font-semibold">Label Manager</h2>
+          </div>
           <button
             onClick={toggleFullscreen}
             className="p-2 rounded hover:bg-violet-100 dark:hover:bg-violet-900 text-neutral-400 dark:text-neutral-500 font-thin text-2xl transition"

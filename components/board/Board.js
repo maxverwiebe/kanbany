@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { v4 as uuid } from "uuid";
 import i18n from "@/lib/i18n";
 import { useBoard } from "@/lib/BoardContext";
@@ -9,6 +10,7 @@ import BoardHeader from "./BoardHeader";
 import BoardMenu from "./BoardMenu";
 import BoardContent from "./BoardContent";
 import BoardModals from "./BoardModals";
+import CreateSharedModal from "./shared/CreateSharedModal";
 
 export default function Board() {
   const board = useBoard();
@@ -27,11 +29,14 @@ export default function Board() {
     setLabels,
   } = board;
 
+  const router = useRouter();
+
   const [showColManager, setShowColManager] = useState(false);
   const [showLabelManager, setShowLabelManager] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [importChecked, setImportChecked] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showCreateSharedModal, setShowCreateSharedModal] = useState(false);
 
   const { ImportLocalStorage, ExportLocalStorage } = LocalStorageSaver();
   useEffect(() => {
@@ -105,6 +110,39 @@ export default function Board() {
     },
     onCardClick: (id) => board.setModalCardId(id),
     hideShowDropdown: () => setShowDropdown(false),
+    showCreateSharedModal: () => {
+      setShowCreateSharedModal(true);
+      setShowDropdown(false);
+    },
+  };
+
+  const handleCreateShared = async ({
+    name,
+    password,
+    expiration,
+    importLocal,
+  }) => {
+    try {
+      const payload = {
+        name,
+        password,
+        expiration,
+        importLocal,
+        data: importLocal ? exportBoard() : undefined,
+      };
+      const res = await fetch("/api/shared/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to create");
+      addToast("Shared board created!", "success");
+      router.push(json.url);
+    } catch (err) {
+      console.error(err);
+      addToast(`Error: ${err.message}`, "error");
+    }
   };
 
   return (
@@ -128,6 +166,12 @@ export default function Board() {
         setShowColManager={setShowColManager}
         showLabelManager={showLabelManager}
         setShowLabelManager={setShowLabelManager}
+      />
+
+      <CreateSharedModal
+        isOpen={showCreateSharedModal}
+        onCreate={handleCreateShared}
+        onCancel={() => setShowCreateSharedModal(false)}
       />
     </div>
   );

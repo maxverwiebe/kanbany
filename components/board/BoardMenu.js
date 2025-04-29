@@ -17,7 +17,7 @@ export default function BoardMenu({ handlers, isDarkMode }) {
 
   return (
     <div className="relative w-full" ref={menuRef}>
-      <div className="absolute top-full left-0 right-0 w-full md:w-48 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 rounded-lg shadow-2xl z-10 dark:border-neutral-900 dark:border">
+      <div className="absolute top-full right-1 w-full md:w-48 bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-200 rounded-lg shadow-2xl z-10 dark:border-neutral-900 dark:border">
         <div className="py-1 flex flex-col">
           <button
             className="w-full text-left px-4 py-2 hover:bg-violet-100 dark:hover:bg-violet-950 rounded"
