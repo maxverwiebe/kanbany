@@ -11,6 +11,7 @@ import BoardMenu from "./BoardMenu";
 import BoardContent from "./BoardContent";
 import BoardModals from "./BoardModals";
 import CreateSharedModal from "./shared/CreateSharedModal";
+import CardSearchModal from "../CardSearchModal";
 
 export default function Board() {
   const board = useBoard();
@@ -37,6 +38,7 @@ export default function Board() {
   const [importChecked, setImportChecked] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showCreateSharedModal, setShowCreateSharedModal] = useState(false);
+  const [showCardSearchModal, setShowCardSearchModal] = useState(false);
 
   const { ImportLocalStorage, ExportLocalStorage } = LocalStorageSaver();
   useEffect(() => {
@@ -114,6 +116,9 @@ export default function Board() {
       setShowCreateSharedModal(true);
       setShowDropdown(false);
     },
+    showCardSearchModal: () => {
+      setShowCardSearchModal(true);
+    },
   };
 
   const handleCreateShared = async ({
@@ -173,6 +178,20 @@ export default function Board() {
         onCreate={handleCreateShared}
         onCancel={() => setShowCreateSharedModal(false)}
       />
+
+      <CardSearchModal
+        isOpen={showCardSearchModal}
+        onClose={(cardID) => {
+          if (cardID) {
+            const card = cards.find((c) => c.id === cardID);
+            if (card) {
+              openModal(cardID);
+            }
+          }
+
+          setShowCardSearchModal(false);
+        }}
+      ></CardSearchModal>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { v4 as uuid } from "uuid";
 import { io } from "socket.io-client";
-import { FaUsers, FaHashtag, FaHourglassHalf } from "react-icons/fa";
+import { FaUsers, FaHashtag, FaHourglassHalf, FaSignal } from "react-icons/fa";
 
 import i18n from "@/lib/i18n";
 import { useBoard } from "@/lib/BoardContext";
@@ -14,6 +14,7 @@ import BoardModals from "../BoardModals";
 import PasswordModal from "./PasswordPrompt";
 import BoardExpiredModal from "./BoardExpiredModal";
 import BoardSkeleton from "@/components/BoardSkeleton";
+import CardSearchModal from "../../CardSearchModal";
 
 // Helper to produce a JSON string with sorted keys for deep-equal comparisons
 function canonicalize(obj) {
@@ -55,6 +56,7 @@ export default function Board({ id }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showColManager, setShowColManager] = useState(false);
   const [showLabelManager, setShowLabelManager] = useState(false);
+  const [showCardSearchModal, setShowCardSearchModal] = useState(false);
 
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -65,6 +67,8 @@ export default function Board({ id }) {
     expiresAt: null,
     expireDays: null,
   });
+
+  const [socketStatus, setSocketStatus] = useState("CONNECTING"); // "connected", "disconnected", "connecting"
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
 
@@ -121,6 +125,7 @@ export default function Board({ id }) {
           password: localStorage.getItem("kanbanyShared+" + id) || "",
         });
         addToast(i18n.t("socket.connected"), "success");
+        setSocketStatus("CONNECTED");
       });
 
       socketRef.current.on("userCount", setUserCount);
@@ -133,9 +138,10 @@ export default function Board({ id }) {
         setTimeout(() => (suppressSaveRef.current = false), 500);
       });
 
-      socketRef.current.on("connect_error", () =>
-        addToast(i18n.t("socket.error"), "error")
-      );
+      socketRef.current.on("connect_error", () => {
+        addToast(i18n.t("socket.error"), "error");
+        setSocketStatus("DISCONNECTED");
+      });
     } catch (err) {
       addToast("Error: " + err.message, "error");
     }
@@ -189,7 +195,9 @@ export default function Board({ id }) {
         });
         const result = await res.json();
         addToast(
-          res.status === 201 ? "Board gespeichert" : "Fehler: " + result.error,
+          res.status === 201
+            ? i18n.t("board.saved")
+            : i18nt.t("general.error") + " " + result.error,
           res.status === 201 ? "success" : "error"
         );
       } catch (err) {
@@ -254,6 +262,9 @@ export default function Board({ id }) {
       navigator.clipboard.writeText(window.location.href);
       addToast(i18n.t("board.copyLinkSuccess"), "success");
     },
+    showCardSearchModal: () => {
+      setShowCardSearchModal(true);
+    },
   };
 
   const handlePasswordConfirm = (pw) => {
@@ -300,6 +311,23 @@ export default function Board({ id }) {
         </div>
 
         <div className="h-6 border-l border-neutral-300 dark:border-neutral-600" />
+
+        <div className="flex items-center space-x-2">
+          <FaSignal className="w-5 h-5 text-neutral-500" />
+          {socketStatus === "CONNECTED" ? (
+            <span className="text-xs font-medium text-green-700 dark:text-green-200 font-mono">
+              {i18n.t("socket.statusConnected")}
+            </span>
+          ) : socketStatus === "CONNECTING" ? (
+            <span className="text-xs font-medium text-yellow-700 dark:text-yellow-200 font-mono">
+              {i18n.t("socket.statusConnecting")}
+            </span>
+          ) : (
+            <span className="text-xs font-medium text-red-700 dark:text-red-200 font-mono">
+              {i18n.t("socket.statusDisconnected")}
+            </span>
+          )}
+        </div>
       </div>
 
       {boardError[0] ? (
@@ -332,6 +360,20 @@ export default function Board({ id }) {
           />
         </>
       )}
+
+      <CardSearchModal
+        isOpen={showCardSearchModal}
+        onClose={(cardID) => {
+          if (cardID) {
+            const card = cards.find((c) => c.id === cardID);
+            if (card) {
+              openModal(cardID);
+            }
+          }
+
+          setShowCardSearchModal(false);
+        }}
+      ></CardSearchModal>
 
       <PasswordModal
         isOpen={showPasswordModal}

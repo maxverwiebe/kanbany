@@ -63,6 +63,7 @@
     },
     "board": {
         "loaded": "Board loaded!",
+        "saved": "Board saved!",
         "passwordWrong": "Wrong password!",
         "serverSavingError": "Error saving to server! {{error}}",
         "copyLink": "Copy link",
@@ -74,6 +75,9 @@
         "disconnected": "Disconnected from server!",
         "reconnecting": "Reconnecting to server...",
         "reconnected": "Reconnected to server!",
-        "error": "Socket Error"
+        "error": "Socket Error",
+        "statusConnected": "CONNECTED",
+        "statusDisconnected": "DISCONNECTED",
+        "statusConnecting": "CONNECTING..."
     }
 }
