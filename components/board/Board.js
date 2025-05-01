@@ -5,6 +5,7 @@ import i18n from "@/lib/i18n";
 import { useBoard } from "@/lib/BoardContext";
 import LocalStorageSaver from "@/lib/LocalStorageSaver";
 import { addToast } from "@/lib/Toast";
+import { isMac } from "@/lib/Platform";
 
 import BoardHeader from "./BoardHeader";
 import BoardMenu from "./BoardMenu";
@@ -65,6 +66,18 @@ export default function Board() {
       setIsDarkMode(enabled);
       document.documentElement.classList.toggle("dark", enabled);
     }
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const mod = isMac() ? e.metaKey : e.ctrlKey;
+      if (mod && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        handlers.showCardSearchModal();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
   const handlers = {

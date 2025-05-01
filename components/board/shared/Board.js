@@ -6,6 +6,7 @@ import { FaUsers, FaHashtag, FaHourglassHalf, FaSignal } from "react-icons/fa";
 import i18n from "@/lib/i18n";
 import { useBoard } from "@/lib/BoardContext";
 import { addToast } from "@/lib/Toast";
+import { isMac } from "@/lib/Platform";
 
 import BoardHeader from "../BoardHeader";
 import BoardMenu from "../BoardMenu";
@@ -107,7 +108,6 @@ export default function Board({ id }) {
       setShowPasswordModal(false);
       addToast(i18n.t("board.loaded"), "success");
 
-      // Socket verbinden
       socketRef.current = io(window.location.origin, {
         path: "/api/shared/socket",
         //transports: ["websocket", "polling"],
@@ -213,6 +213,18 @@ export default function Board({ id }) {
     const enabled = stored === "true";
     setIsDarkMode(enabled);
     document.documentElement.classList.toggle("dark", enabled);
+  }, []);
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      const mod = isMac() ? e.metaKey : e.ctrlKey;
+      if (mod && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        handlers.showCardSearchModal();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, []);
 
   const handlers = {
