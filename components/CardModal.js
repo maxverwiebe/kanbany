@@ -9,6 +9,16 @@ import { MdDeleteOutline } from "react-icons/md";
 import CardChecklist from "./CardChecklist";
 import ConfirmationModal from "./ConfirmationModal";
 import { BiCard } from "react-icons/bi";
+import { MdClose } from "react-icons/md";
+
+function formatDateInput(value) {
+  if (!value) return "";
+  if (typeof value === "number") {
+    const d = new Date(value);
+    return d.toISOString().slice(0, 10);
+  }
+  return value;
+}
 
 export default function CardModal() {
   const {
@@ -26,6 +36,7 @@ export default function CardModal() {
   const [description, setDescription] = useState(card?.description || "");
   const [selectedLabels, setSelectedLabels] = useState(card?.labels || []);
   const [columnID, setColumnID] = useState(card?.columnId || "");
+  const [dueDate, setDueDate] = useState(formatDateInput(card?.dueDate) || "");
 
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
@@ -170,12 +181,14 @@ export default function CardModal() {
   };
 
   const save = () => {
+    const timestamp = dueDate ? new Date(dueDate).getTime() : null;
     updateCard(card.id, {
       text: title,
       description,
       labels: selectedLabels,
       columnId: columnID,
       checklist: checklist,
+      dueDate: timestamp,
     });
     addToast("Updated card!", "success");
     closeModal();
@@ -367,6 +380,32 @@ export default function CardModal() {
                 );
               })}
             </div>
+            <div className="mb-4 mt-4">
+              <h3 className="text-md font-semibold text-neutral-700 dark:text-neutral-200">
+                {i18n.t("card.dueDate")}
+              </h3>
+              <div className="relative flex items-center">
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className="flex-1 px-1 rounded-md transition duration-300 ease-in-out 
+        focus:outline-none focus:border-neutral-400 hover:border-neutral-400 
+        border-neutral-300 text-neutral-800 bg-white
+        dark:text-neutral-200 dark:border-neutral-600 dark:bg-neutral-800"
+                />
+                {dueDate && (
+                  <button
+                    type="button"
+                    onClick={() => setDueDate("")}
+                    className=" right-2 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 transition"
+                    aria-label="Clear date"
+                  >
+                    <MdClose size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -488,6 +527,32 @@ export default function CardModal() {
                   </button>
                 );
               })}
+            </div>
+          </div>
+          <div className="mb-4 mt-4">
+            <h3 className="text-md font-semibold text-neutral-700 dark:text-neutral-200">
+              {i18n.t("card.dueDate")}
+            </h3>
+            <div className="relative flex items-center">
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="flex-1 px-1 rounded-md transition duration-300 ease-in-out 
+        focus:outline-none focus:border-neutral-400 hover:border-neutral-400 
+        border-neutral-300 text-neutral-800 bg-white
+        dark:text-neutral-200 dark:border-neutral-600 dark:bg-neutral-800"
+              />
+              {dueDate && (
+                <button
+                  type="button"
+                  onClick={() => setDueDate("")}
+                  className=" right-2 text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 transition"
+                  aria-label="Clear date"
+                >
+                  <MdClose size={18} />
+                </button>
+              )}
             </div>
           </div>
         </div>

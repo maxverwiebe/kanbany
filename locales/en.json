@@ -13,6 +13,7 @@
         "title": "Title",
         "column": "Change column",
         "labels": "Change labels",
+        "dueDate": "Due date",
         "checklistAdd": "Add checklist",
         "checklistAddTask": "Add task to checklist",
         "checklistDelete": "Delete checklist",
