@@ -31,14 +31,14 @@ export default async function handler(req, res) {
       }
 
       const { data, password, name, expire_at } = rows[0];
-      const xboard_password = req.headers.xboard_password;
+      const xboardPassword = req.headers["x-board-password"];
 
-      if (password && !xboard_password) {
+      if (password && !xboardPassword) {
         return res.status(400).json({ error: "Password header missing" });
       }
 
       const passwordValid = password
-        ? await bcrypt.compare(xboard_password, password)
+        ? await bcrypt.compare(xboardPassword, password)
         : null;
 
       if (!passwordValid) {
