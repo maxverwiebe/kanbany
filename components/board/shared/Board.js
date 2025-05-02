@@ -77,7 +77,7 @@ export default function Board({ id }) {
     try {
       const pw = localStorage.getItem("kanbanyShared+" + id) || "";
       const res = await fetch(`/api/shared/${id}`, {
-        headers: { "Content-Type": "application/json", xboard_password: pw },
+        headers: { "Content-Type": "application/json", Xboard_password: pw },
       });
       const data = await res.json();
 
