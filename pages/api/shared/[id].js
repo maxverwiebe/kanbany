@@ -33,6 +33,10 @@ export default async function handler(req, res) {
       const { data, password, name, expire_at } = rows[0];
       const xboard_password = req.headers.xboard_password;
 
+      if (password && !xboard_password) {
+        return res.status(400).json({ error: "Password header missing" });
+      }
+
       const passwordValid = password
         ? await bcrypt.compare(xboard_password, password)
         : null;
@@ -46,7 +50,7 @@ export default async function handler(req, res) {
         .json({ data, name: name || "n/A", expires_at: expire_at });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error " + err });
     }
   }
 
