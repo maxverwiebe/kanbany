@@ -83,7 +83,10 @@ export default function Board({ id }) {
 
       if (res.status !== 200) {
         setBoardError([true, data.error]);
-        if (data.error === "Invalid password") {
+        if (
+          data.error === "Invalid password" ||
+          data.error === "Password header missing"
+        ) {
           setShowPasswordModal(true);
           addToast(i18n.t("board.passwordWrong"), "error");
         }
