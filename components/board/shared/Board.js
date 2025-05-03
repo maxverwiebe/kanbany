@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+"use client";
+
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
-import { io } from "socket.io-client";
 import { FaUsers, FaHashtag, FaHourglassHalf, FaSignal } from "react-icons/fa";
+
+import { socket } from "@/lib/Socket";
 
 import i18n from "@/lib/i18n";
 import { useBoard } from "@/lib/BoardContext";
@@ -17,22 +20,96 @@ import BoardExpiredModal from "./BoardExpiredModal";
 import BoardSkeleton from "@/components/BoardSkeleton";
 import CardSearchModal from "../../CardSearchModal";
 
-// Helper to produce a JSON string with sorted keys for deep-equal comparisons
+////////////////////////////////////////////////////////////////////////////////
+// Helpers
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Return a new object/array with deterministic key ordering – useful to
+ * guarantee stable JSON.stringify results for deep‑equals or caching.
+ */
 function canonicalize(obj) {
-  if (Array.isArray(obj)) {
-    return obj.map(canonicalize);
-  } else if (obj && typeof obj === "object") {
+  if (Array.isArray(obj)) return obj.map(canonicalize);
+  if (obj && typeof obj === "object") {
     return Object.keys(obj)
       .sort()
-      .reduce((acc, key) => {
-        acc[key] = canonicalize(obj[key]);
+      .reduce((acc, k) => {
+        acc[k] = canonicalize(obj[k]);
         return acc;
       }, {});
   }
   return obj;
 }
 
-export default function Board({ id }) {
+function useBoardSocket({
+  boardId,
+  password,
+  importBoard,
+  onUserCount,
+  onStatus,
+}) {
+  const lastUpdateId = useRef(null);
+  const suppressSave = useRef(false);
+
+  useEffect(() => {
+    if (!boardId) return;
+
+    if (!socket.connected) socket.connect("socket.kanbany.app");
+
+    const handleConnect = () => {
+      socket.emit("joinBoard", { boardId, password });
+      addToast(i18n.t("socket.connected"), "success");
+      onStatus("CONNECTED");
+    };
+
+    const handleDisconnect = () => onStatus("DISCONNECTED");
+    const handleConnectError = () => {
+      addToast(i18n.t("socket.error"), "error");
+      onStatus("DISCONNECTED");
+    };
+
+    const handleBoardUpdated = ({ boardData, updateId }) => {
+      if (updateId === lastUpdateId.current) return; // already applied
+      suppressSave.current = true;
+      importBoard(boardData);
+      setTimeout(() => (suppressSave.current = false), 500); // small grace period
+    };
+
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("connect_error", handleConnectError);
+    socket.on("userCount", onUserCount);
+    socket.on("boardUpdated", handleBoardUpdated);
+
+    return () => {
+      socket.emit("leaveBoard", { boardId });
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("connect_error", handleConnectError);
+      socket.off("userCount", onUserCount);
+      socket.off("boardUpdated", handleBoardUpdated);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boardId, password]);
+
+  return { lastUpdateId, suppressSave };
+}
+
+function useDebouncedEffect(cb, deps, delay) {
+  const cbRef = useRef(cb);
+  useEffect(() => {
+    cbRef.current = cb;
+  });
+
+  useEffect(() => {
+    if (delay === null) return;
+    const handle = setTimeout(() => cbRef.current(), delay);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...deps, delay]);
+}
+
+export default function Board({ id: boardId }) {
   const {
     columns,
     cards,
@@ -48,204 +125,172 @@ export default function Board({ id }) {
     setLabels,
   } = useBoard();
 
-  const hasFetchedRef = useRef(false);
-  const suppressSaveRef = useRef(false);
-  const lastUpdateIdRef = useRef(null);
-  const socketRef = useRef(null);
-  const lastSavedStateRef = useRef("");
-
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showColManager, setShowColManager] = useState(false);
-  const [showLabelManager, setShowLabelManager] = useState(false);
-  const [showCardSearchModal, setShowCardSearchModal] = useState(false);
-
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
   const [boardError, setBoardError] = useState([true, "n/A"]);
+  const [socketStatus, setSocketStatus] = useState("CONNECTING");
   const [userCount, setUserCount] = useState(1);
   const [boardMetadata, setBoardMetadata] = useState({
     name: "n/a",
     expiresAt: null,
     expireDays: null,
   });
+  const [ui, setUI] = useState({
+    showDropdown: false,
+    showColManager: false,
+    showLabelManager: false,
+    showCardSearchModal: false,
+    isDarkMode: false,
+    showPasswordModal: false,
+  });
 
-  const [socketStatus, setSocketStatus] = useState("CONNECTING"); // "connected", "disconnected", "connecting"
+  const hasFetched = useRef(false);
+  const lastSavedJSON = useRef("");
+  const passwordRef = useRef("");
 
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const { lastUpdateId, suppressSave } = useBoardSocket({
+    boardId,
+    password: passwordRef.current,
+    importBoard,
+    onUserCount: setUserCount,
+    onStatus: setSocketStatus,
+  });
 
-  const fetchBoardData = useCallback(async () => {
+  const fetchBoard = useCallback(async () => {
     try {
-      const pw = localStorage.getItem("kanbanyShared+" + id) || "";
-      const res = await fetch(`/api/shared/${id}`, {
-        headers: { "Content-Type": "application/json", "X-Board-Password": pw },
+      const pw = localStorage.getItem(`kanbanyShared+${boardId}`) || "";
+      passwordRef.current = pw;
+
+      const res = await fetch(`/api/shared/${boardId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Board-Password": pw,
+        },
       });
       const data = await res.json();
 
       if (res.status !== 200) {
         setBoardError([true, data.error]);
         if (
-          data.error === "Invalid password" ||
-          data.error === "Password header missing"
+          data.error?.includes("password") ||
+          data.error?.includes("Password")
         ) {
-          setShowPasswordModal(true);
+          setUI((u) => ({ ...u, showPasswordModal: true }));
           addToast(i18n.t("board.passwordWrong"), "error");
         }
         return;
       }
-
-      //console.log("Board data fetched:", data);
 
       importBoard(data.data);
       setBoardMetadata({
         name: data.name,
         expiresAt: data.expires_at,
         expireDays: Math.floor(
-          (new Date(data.expires_at) - new Date()) / (1000 * 60 * 60 * 24)
+          (new Date(data.expires_at) - new Date()) / 86400000
         ),
       });
 
-      const initialObj = canonicalize(data.data);
-      lastSavedStateRef.current = JSON.stringify(initialObj);
-
+      lastSavedJSON.current = JSON.stringify(canonicalize(data.data));
       setBoardError([false, "n/A"]);
-      setShowPasswordModal(false);
+      setUI((u) => ({ ...u, showPasswordModal: false }));
       addToast(i18n.t("board.loaded"), "success");
-
-      socketRef.current = io("https://socket.kanbany.app", {
-        //path: "/api/shared/socket",
-        //transports: ["websocket", "polling"],
-        reconnection: true,
-        reconnectionAttempts: Infinity,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-        randomizationFactor: 0.5,
-        timeout: 10000,
-      });
-
-      socketRef.current.on("connect", () => {
-        socketRef.current.emit("joinBoard", {
-          boardId: id,
-          password: localStorage.getItem("kanbanyShared+" + id) || "",
-        });
-        addToast(i18n.t("socket.connected"), "success");
-        setSocketStatus("CONNECTED");
-      });
-
-      socketRef.current.on("userCount", setUserCount);
-
-      socketRef.current.on("boardUpdated", ({ boardData, updateId }) => {
-        if (updateId === lastUpdateIdRef.current) return;
-        suppressSaveRef.current = true;
-        importBoard(boardData);
-        //addToast("UPDATED", "info");
-        setTimeout(() => (suppressSaveRef.current = false), 500);
-      });
-
-      socketRef.current.on("connect_error", () => {
-        addToast(i18n.t("socket.error"), "error");
-        setSocketStatus("DISCONNECTED");
-      });
     } catch (err) {
-      addToast("Error: " + err.message, "error");
+      addToast(`Error: ${err.message}`, "error");
     }
-  }, [id, importBoard]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boardId]);
 
   useEffect(() => {
-    if (hasFetchedRef.current) return;
-    hasFetchedRef.current = true;
-    fetchBoardData();
-    return () => {
-      socketRef.current?.disconnect();
-    };
-  }, [fetchBoardData]);
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+    fetchBoard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  useEffect(() => {
-    if (suppressSaveRef.current) return;
-    if (boardError[0]) return;
-
-    const timer = setTimeout(async () => {
-      if (suppressSaveRef.current) return;
+  useDebouncedEffect(
+    () => {
+      if (suppressSave.current || boardError[0]) return;
 
       const raw = JSON.parse(exportBoard());
       const canon = canonicalize(raw);
-      const currentString = JSON.stringify(canon);
-
-      console.log("Autosaving board...");
-      //console.log("Current JSON:", currentString);
-      //console.log("Last saved JSON:", lastSavedStateRef.current);
-
-      if (currentString === lastSavedStateRef.current) {
-        console.log("No changes detected, skipping save");
-        return;
-      }
+      const current = JSON.stringify(canon);
+      if (current === lastSavedJSON.current) return; // nothing changed
 
       const updateId = uuid();
-      lastUpdateIdRef.current = updateId;
-
-      lastSavedStateRef.current = currentString;
+      lastUpdateId.current = updateId;
+      lastSavedJSON.current = current;
 
       const body = JSON.stringify({
-        data: JSON.parse(currentString),
-        password: localStorage.getItem("kanbanyShared+" + id) || "",
+        data: JSON.parse(current),
+        password: passwordRef.current,
         updateId,
       });
 
-      try {
-        const res = await fetch(`/api/shared/${id}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body,
-        });
-        const result = await res.json();
-        addToast(
-          res.status === 201
-            ? i18n.t("board.saved")
-            : i18nt.t("general.error") + " " + result.error,
-          res.status === 201 ? "success" : "error"
-        );
-      } catch (err) {
-        addToast(i18n.t("serverSavingError", { error: err.message }), "error");
-      }
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [columns, cards, labels, id]);
+      (async () => {
+        try {
+          const res = await fetch(`/api/shared/${boardId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body,
+          });
+          const result = await res.json();
+          addToast(
+            res.status === 201
+              ? i18n.t("board.saved")
+              : i18n.t("general.error") + " " + result.error,
+            res.status === 201 ? "success" : "error"
+          );
+        } catch (err) {
+          addToast(
+            i18n.t("serverSavingError", { error: err.message }),
+            "error"
+          );
+        }
+      })();
+    },
+    // Dependencies
+    [columns, cards, labels],
+    2000
+  );
 
   useEffect(() => {
-    const stored = localStorage.getItem("darkMode");
-    const enabled = stored === "true";
-    setIsDarkMode(enabled);
-    document.documentElement.classList.toggle("dark", enabled);
+    const stored = localStorage.getItem("darkMode") === "true";
+    setUI((u) => ({ ...u, isDarkMode: stored }));
+    document.documentElement.classList.toggle("dark", stored);
   }, []);
 
   useEffect(() => {
-    const onKeyDown = (e) => {
-      const mod = isMac() ? e.metaKey : e.ctrlKey;
-      if (mod && e.key.toLowerCase() === "k") {
+    const listener = (e) => {
+      if ((isMac() ? e.metaKey : e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        handlers.showCardSearchModal();
+        setUI((u) => ({ ...u, showCardSearchModal: true }));
       }
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", listener);
+    return () => document.removeEventListener("keydown", listener);
   }, []);
 
   const handlers = {
-    toggleDropdown: () => setShowDropdown((v) => !v),
-    openColManager: () => {
-      setShowColManager(true);
-      setShowDropdown(false);
-    },
-    openLabelManager: () => {
-      setShowLabelManager(true);
-      setShowDropdown(false);
-    },
+    // dropdown
+    toggleDropdown: () =>
+      setUI((u) => ({ ...u, showDropdown: !u.showDropdown })),
+    hideDropdown: () => setUI((u) => ({ ...u, showDropdown: false })),
+
+    // managers
+    openColManager: () =>
+      setUI((u) => ({ ...u, showColManager: true, showDropdown: false })),
+    openLabelManager: () =>
+      setUI((u) => ({ ...u, showLabelManager: true, showDropdown: false })),
+
+    // theme
     toggleDarkMode: () => {
-      const val = !isDarkMode;
-      setIsDarkMode(val);
-      localStorage.setItem("darkMode", val.toString());
-      document.documentElement.classList.toggle("dark", val);
+      setUI((u) => {
+        const val = !u.isDarkMode;
+        localStorage.setItem("darkMode", val.toString());
+        document.documentElement.classList.toggle("dark", val);
+        return { ...u, isDarkMode: val };
+      });
     },
+
+    // data import / export
     exportFile: () => {
       const blob = new Blob([exportBoard()], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -271,33 +316,33 @@ export default function Board({ id }) {
       };
       reader.readAsText(file);
     },
-    onCardClick: (cardId) => openModal(cardId),
-    hideShowDropdown: () => setShowDropdown(false),
+
+    // cards
+    onCardClick: openModal,
+    showCardSearchModal: () =>
+      setUI((u) => ({ ...u, showCardSearchModal: true })),
+
+    // board url
     copyBoardURL: () => {
       navigator.clipboard.writeText(window.location.href);
       addToast(i18n.t("board.copyLinkSuccess"), "success");
     },
-    showCardSearchModal: () => {
-      setShowCardSearchModal(true);
-    },
   };
 
   const handlePasswordConfirm = (pw) => {
-    localStorage.setItem("kanbanyShared+" + id, pw);
-    setShowPasswordModal(false);
-    fetchBoardData();
-  };
-
-  const handlePasswordCancel = () => {
-    //setShowPasswordModal(false);
+    localStorage.setItem(`kanbanyShared+${boardId}`, pw);
+    passwordRef.current = pw;
+    setUI((u) => ({ ...u, showPasswordModal: false }));
+    fetchBoard();
   };
 
   return (
     <div className="bg-white dark:bg-neutral-900 min-h-screen">
-      <BoardHeader showDropdown={showDropdown} handlers={handlers} />
-      {showDropdown && (
-        <BoardMenu handlers={handlers} isDarkMode={isDarkMode} />
+      <BoardHeader showDropdown={ui.showDropdown} handlers={handlers} />
+      {ui.showDropdown && (
+        <BoardMenu handlers={handlers} isDarkMode={ui.isDarkMode} />
       )}
+
       <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 px-6 py-3 space-x-6 shadow-md mb-4 rounded-md">
         <div className="flex items-center space-x-2">
           <FaHashtag className="w-5 h-5 text-neutral-500" />
@@ -350,8 +395,7 @@ export default function Board({ id }) {
           <div className="text-red-500 dark:text-red-400 px-4">
             Error: {boardError[1]}
           </div>
-
-          <BoardSkeleton></BoardSkeleton>
+          <BoardSkeleton />
         </>
       ) : (
         <>
@@ -368,32 +412,33 @@ export default function Board({ id }) {
               setCards,
               setLabels,
             }}
-            showColManager={showColManager}
-            setShowColManager={setShowColManager}
-            showLabelManager={showLabelManager}
-            setShowLabelManager={setShowLabelManager}
+            showColManager={ui.showColManager}
+            setShowColManager={(v) =>
+              setUI((u) => ({ ...u, showColManager: v }))
+            }
+            showLabelManager={ui.showLabelManager}
+            setShowLabelManager={(v) =>
+              setUI((u) => ({ ...u, showLabelManager: v }))
+            }
           />
         </>
       )}
 
       <CardSearchModal
-        isOpen={showCardSearchModal}
+        isOpen={ui.showCardSearchModal}
         onClose={(cardID) => {
           if (cardID) {
             const card = cards.find((c) => c.id === cardID);
-            if (card) {
-              openModal(cardID);
-            }
+            if (card) openModal(cardID);
           }
-
-          setShowCardSearchModal(false);
+          setUI((u) => ({ ...u, showCardSearchModal: false }));
         }}
-      ></CardSearchModal>
+      />
 
       <PasswordModal
-        isOpen={showPasswordModal}
+        isOpen={ui.showPasswordModal}
         onConfirm={handlePasswordConfirm}
-        onCancel={handlePasswordCancel}
+        onCancel={() => {}}
       />
 
       <BoardExpiredModal
