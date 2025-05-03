@@ -111,8 +111,8 @@ export default function Board({ id }) {
       setShowPasswordModal(false);
       addToast(i18n.t("board.loaded"), "success");
 
-      socketRef.current = io(window.location.origin, {
-        path: "/api/shared/socket",
+      socketRef.current = io("https://socket.kanbany.app", {
+        //path: "/api/shared/socket",
         //transports: ["websocket", "polling"],
         reconnection: true,
         reconnectionAttempts: Infinity,
