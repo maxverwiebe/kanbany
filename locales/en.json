@@ -4,7 +4,10 @@
         "delete": "Delete",
         "close": "Close",
         "save": "Save",
-        "darkMode": "Dark Mode"
+        "darkMode": "Dark Mode",
+        "boardTools": "Board Tools",
+        "appearance": "Appearance",
+        "data": "Data"
     },
     "card": {
         "edit": "Edit card",
@@ -80,5 +83,8 @@
         "statusConnected": "CONNECTED",
         "statusDisconnected": "DISCONNECTED",
         "statusConnecting": "CONNECTING..."
+    },
+    "calendar": {
+        "open": "Calendar"
     }
 }
