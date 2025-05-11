@@ -10,6 +10,7 @@ import i18n from "@/lib/i18n";
 import { useBoard } from "@/lib/BoardContext";
 import { addToast } from "@/lib/Toast";
 import { isMac } from "@/lib/Platform";
+import { addVisitedSharedBoard } from "../BoardListMenu";
 
 import BoardHeader from "../BoardHeader";
 import BoardMenu from "../BoardMenu";
@@ -19,10 +20,13 @@ import PasswordModal from "./PasswordPrompt";
 import BoardExpiredModal from "./BoardExpiredModal";
 import BoardSkeleton from "@/components/BoardSkeleton";
 import CardSearchModal from "../../CardSearchModal";
+import BoardListMenu from "../BoardListMenu";
+import { Tooltip } from "@/components/basic/Tooltip";
+import CalendarPopupModal from "../../CalendarModal";
+import BoardShareModal from "./BoardShareModal";
+import BoardNotFoundModal from "./BoardNotFoundModal";
 
-////////////////////////////////////////////////////////////////////////////////
-// Helpers
-////////////////////////////////////////////////////////////////////////////////
+const BOARD_FALLBACK_NAME = "n/a";
 
 /**
  * Return a new object/array with deterministic key ordering – useful to
@@ -129,7 +133,7 @@ export default function Board({ id: boardId }) {
   const [socketStatus, setSocketStatus] = useState("CONNECTING");
   const [userCount, setUserCount] = useState(1);
   const [boardMetadata, setBoardMetadata] = useState({
-    name: "n/a",
+    name: BOARD_FALLBACK_NAME,
     expiresAt: null,
     expireDays: null,
   });
@@ -140,6 +144,9 @@ export default function Board({ id: boardId }) {
     showCardSearchModal: false,
     isDarkMode: false,
     showPasswordModal: false,
+    showBoardListMenu: false,
+    showShareModal: false,
+    showCalendar: false,
   });
 
   const hasFetched = useRef(false);
@@ -204,6 +211,12 @@ export default function Board({ id: boardId }) {
     fetchBoard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (boardMetadata.name === BOARD_FALLBACK_NAME) return;
+
+    addVisitedSharedBoard(boardId, boardMetadata.name);
+  }, [boardMetadata]);
 
   useDebouncedEffect(
     () => {
@@ -282,12 +295,10 @@ export default function Board({ id: boardId }) {
 
     // theme
     toggleDarkMode: () => {
-      setUI((u) => {
-        const val = !u.isDarkMode;
-        localStorage.setItem("darkMode", val.toString());
-        document.documentElement.classList.toggle("dark", val);
-        return { ...u, isDarkMode: val };
-      });
+      const val = !ui.isDarkMode;
+      localStorage.setItem("darkMode", val.toString());
+      document.documentElement.classList.toggle("dark", val);
+      setUI((u) => ({ ...u, isDarkMode: val }));
     },
 
     // data import / export
@@ -324,8 +335,18 @@ export default function Board({ id: boardId }) {
 
     // board url
     copyBoardURL: () => {
-      navigator.clipboard.writeText(window.location.href);
-      addToast(i18n.t("board.copyLinkSuccess"), "success");
+      setUI((u) => ({ ...u, showShareModal: true }));
+    },
+
+    openCalendar: () => {
+      setUI((u) => ({ ...u, showCalendar: true }));
+    },
+    showBoardListMenu: () => {
+      setUI((u) => ({ ...u, showDropdown: false }));
+      setUI((u) => ({ ...u, showBoardListMenu: true }));
+    },
+    hideShowDropdown: () => {
+      setUI((u) => ({ ...u, showDropdown: false }));
     },
   };
 
@@ -338,26 +359,29 @@ export default function Board({ id: boardId }) {
 
   return (
     <div className="bg-white dark:bg-neutral-900 min-h-screen">
-      <BoardHeader showDropdown={ui.showDropdown} handlers={handlers} />
-      {ui.showDropdown && (
-        <BoardMenu handlers={handlers} isDarkMode={ui.isDarkMode} />
-      )}
+      <div className="relative">
+        <BoardHeader showDropdown={ui.showDropdown} handlers={handlers} />
+        {ui.showDropdown && (
+          <BoardMenu
+            isOpen={ui.showDropdown}
+            handlers={handlers}
+            isDarkMode={ui.isDarkMode}
+          />
+        )}
+
+        {ui.showBoardListMenu && (
+          <BoardListMenu
+            isOpen={ui.showBoardListMenu}
+            onClose={() => setUI((u) => ({ ...u, showBoardListMenu: false }))}
+          />
+        )}
+      </div>
 
       <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 px-6 py-3 space-x-6 shadow-md mb-4 rounded-md">
         <div className="flex items-center space-x-2">
           <FaHashtag className="w-5 h-5 text-neutral-500" />
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {boardMetadata.name}
-          </span>
-        </div>
-
-        <div className="h-6 border-l border-neutral-300 dark:border-neutral-600" />
-
-        <div className="flex items-center space-x-2">
-          <FaUsers className="w-5 h-5 text-neutral-500" />
-          <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-            {userCount}{" "}
-            {userCount === 1 ? "Online Participant" : "Online Participants"}
           </span>
         </div>
 
@@ -372,21 +396,36 @@ export default function Board({ id: boardId }) {
 
         <div className="h-6 border-l border-neutral-300 dark:border-neutral-600" />
 
-        <div className="flex items-center space-x-2">
-          <FaSignal className="w-5 h-5 text-neutral-500" />
-          {socketStatus === "CONNECTED" ? (
-            <span className="text-xs font-medium text-green-700 dark:text-green-200 font-mono">
-              {i18n.t("socket.statusConnected")}
-            </span>
-          ) : socketStatus === "CONNECTING" ? (
-            <span className="text-xs font-medium text-yellow-700 dark:text-yellow-200 font-mono">
-              {i18n.t("socket.statusConnecting")}
-            </span>
-          ) : (
-            <span className="text-xs font-medium text-red-700 dark:text-red-200 font-mono">
-              {i18n.t("socket.statusDisconnected")}
-            </span>
-          )}
+        <div className="flex items-center">
+          <Tooltip
+            content={
+              "Connected to server to retrieve realtime updates made by other users."
+            }
+          >
+            <div className="relative flex items-center">
+              <FaSignal
+                className={`w-5 h-5 ${
+                  socketStatus === "CONNECTED"
+                    ? "text-green-500"
+                    : socketStatus === "CONNECTING"
+                    ? "text-yellow-500"
+                    : "text-red-500"
+                }`}
+                title={
+                  socketStatus === "CONNECTED"
+                    ? i18n.t("socket.statusConnected")
+                    : socketStatus === "CONNECTING"
+                    ? i18n.t("socket.statusConnecting")
+                    : i18n.t("socket.statusDisconnected")
+                }
+              />
+              {userCount > 1 ? (
+                <span className="ml-2 text-sm font-medium text-gray-800 dark:text-gray-200">
+                  {userCount - 1} others in room
+                </span>
+              ) : null}
+            </div>
+          </Tooltip>
         </div>
       </div>
 
@@ -448,6 +487,24 @@ export default function Board({ id: boardId }) {
         }
         onClose={() => setBoardError([true, "Board expired"])}
       />
+
+      <BoardShareModal
+        isOpen={ui.showShareModal}
+        onClose={() => setUI((u) => ({ ...u, showShareModal: false }))}
+        url={`https://kanbany.app/shared/${boardId}`}
+        password={passwordRef.current}
+      />
+
+      <CalendarPopupModal
+        isOpen={ui.showCalendar}
+        onClose={() => {
+          setUI((u) => ({ ...u, showCalendar: false }));
+        }}
+      />
+      <BoardNotFoundModal
+        isOpen={boardError[0]}
+        onClose={() => setBoardError([false, "n/A"])}
+      ></BoardNotFoundModal>
     </div>
   );
 }
