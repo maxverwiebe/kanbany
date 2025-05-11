@@ -42,10 +42,7 @@ export default function CreateSharedModal({ isOpen, onCreate, onCancel }) {
 
   return (
     <>
-      <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onCancel}
-      />
+      <div className="fixed inset-0 bg-black/70" onClick={onCancel} />
 
       <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
         <div className="relative bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-lg w-full p-6 space-y-6">

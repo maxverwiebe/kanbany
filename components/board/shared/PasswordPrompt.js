@@ -17,7 +17,7 @@ const PasswordModal = ({ isOpen, onConfirm, onCancel }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/70 backdrop-blur-lg"
         onClick={onCancel}
       />
       <div className="relative bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-md w-full mx-auto p-6 flex flex-col space-y-6">
