@@ -13,6 +13,8 @@ import BoardContent from "./BoardContent";
 import BoardModals from "./BoardModals";
 import CreateSharedModal from "./shared/CreateSharedModal";
 import CardSearchModal from "../CardSearchModal";
+import CalendarPopupModal from "../CalendarModal";
+import BoardListMenu from "./BoardListMenu";
 
 export default function Board() {
   const board = useBoard();
@@ -40,6 +42,8 @@ export default function Board() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showCreateSharedModal, setShowCreateSharedModal] = useState(false);
   const [showCardSearchModal, setShowCardSearchModal] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showBoardListMenu, setShowBoardListMenu] = useState(false);
 
   const { ImportLocalStorage, ExportLocalStorage } = LocalStorageSaver();
   useEffect(() => {
@@ -132,6 +136,13 @@ export default function Board() {
     showCardSearchModal: () => {
       setShowCardSearchModal(true);
     },
+    openCalendar: () => {
+      setShowCalendar(true);
+    },
+    showBoardListMenu: () => {
+      setShowDropdown(false);
+      setShowBoardListMenu(true);
+    },
   };
 
   const handleCreateShared = async ({
@@ -165,11 +176,28 @@ export default function Board() {
 
   return (
     <div className=" bg-white dark:bg-neutral-900">
-      <BoardHeader showDropdown={showDropdown} handlers={handlers} />
+      <div className="relative">
+        <BoardHeader showDropdown={showDropdown} handlers={handlers} />
 
-      {showDropdown && (
-        <BoardMenu handlers={handlers} isDarkMode={isDarkMode} />
-      )}
+        <BoardMenu
+          isOpen={showDropdown}
+          handlers={handlers}
+          isDarkMode={isDarkMode}
+        />
+
+        <BoardListMenu
+          isOpen={showBoardListMenu}
+          onSelectBoard={(board) => {
+            setShowBoardListMenu(false);
+            if (board.id === "local") {
+              router.push("/local");
+            } else {
+              router.push(`/shared/${board.id}`);
+            }
+          }}
+          onClose={() => setShowBoardListMenu(false)}
+        />
+      </div>
 
       <BoardContent
         columns={columns}
@@ -205,6 +233,13 @@ export default function Board() {
           setShowCardSearchModal(false);
         }}
       ></CardSearchModal>
+
+      <CalendarPopupModal
+        isOpen={showCalendar}
+        onClose={() => {
+          setShowCalendar(false);
+        }}
+      />
     </div>
   );
 }
