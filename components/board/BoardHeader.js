@@ -1,13 +1,21 @@
 import React from "react";
-import { MdShare, MdSearch, MdMenu } from "react-icons/md";
+import { MdShare, MdSearch, MdMenu, MdArrowDropDown } from "react-icons/md";
 
 export default function BoardHeader({ showDropdown, handlers }) {
   return (
     <div className="mb-4 w-full">
-      <div className="flex items-center justify-between px-4 py-2 bg-gray-100 shadow-md rounded-md dark:bg-neutral-800">
-        <h1 className="text-xl font-bold text-gray-800 dark:text-neutral-200">
-          KANBANY
-        </h1>
+      <div className="flex items-center justify-between px-3 py-2 bg-gray-100 shadow-md rounded-md dark:bg-neutral-800">
+        <div className="flex items-center">
+          <button
+            onClick={handlers.showBoardListMenu}
+            className="flex items-center hover:bg-neutral-200 dark:hover:bg-neutral-700 px-2 py-1 rounded-md"
+          >
+            <h1 className="text-xl font-bold text-gray-800 dark:text-neutral-200">
+              KANBANY
+            </h1>
+            <MdArrowDropDown className="h-5 w-5 ml-1 text-gray-800 dark:text-neutral-200" />
+          </button>
+        </div>
 
         <div className="flex items-center space-x-2">
           {handlers.showCreateSharedModal && (
