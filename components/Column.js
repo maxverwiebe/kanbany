@@ -20,8 +20,8 @@ export default function Column({ column }) {
   const columnCards = cards.filter((card) => card.columnId === column.id);
   const cardCount = columnCards.length;
 
-  const STACK_OFFSET = 10;
-  const MAX_STACKED_VISIBLE = 3;
+  const STACK_OFFSET = 8;
+  const MAX_STACKED_DISPLAY = 4;
 
   const addCardInColumn = () => {
     const id = addCard(column.id, newText);
@@ -29,31 +29,30 @@ export default function Column({ column }) {
   };
 
   const getStackStyle = (index, total) => {
-    const stackIndex = total - 1 - index;
     return {
-      transform: `translateY(${stackIndex * STACK_OFFSET}px)`,
+      transform: `translateY(${index * STACK_OFFSET}px)`,
       zIndex: total - index,
-      opacity: index === total - 1 ? 1 : 0.9,
+      opacity: index === 0 ? 1 : 0.95,
     };
   };
 
-  const getVisibleCards = () => {
+  const getDisplayCards = () => {
     if (isExpanded) return columnCards;
-    if (cardCount <= MAX_STACKED_VISIBLE) return columnCards;
-    return columnCards.slice(cardCount - MAX_STACKED_VISIBLE);
+    if (cardCount <= MAX_STACKED_DISPLAY) return columnCards;
+    return columnCards.slice(0, MAX_STACKED_DISPLAY);
   };
 
-  const visibleCards = getVisibleCards();
-  const hiddenCount = !isExpanded ? Math.max(0, cardCount - MAX_STACKED_VISIBLE) : 0;
-  const shouldShowStackButton = cardCount > MAX_STACKED_VISIBLE;
+  const displayCards = getDisplayCards();
+  const hiddenCount = !isExpanded ? Math.max(0, cardCount - MAX_STACKED_DISPLAY) : 0;
+  const shouldShowStackButton = cardCount > MAX_STACKED_DISPLAY;
 
   const getStackContainerHeight = () => {
     if (isExpanded) return "auto";
     if (cardCount === 0) return "0";
     if (cardCount === 1) return "auto";
 
-    const baseHeight = 80;
-    const extraOffset = Math.min(cardCount - 1, MAX_STACKED_VISIBLE - 1) * STACK_OFFSET;
+    const baseHeight = 75;
+    const extraOffset = Math.min(cardCount - 1, MAX_STACKED_DISPLAY - 1) * STACK_OFFSET;
     return `${baseHeight + extraOffset}px`;
   };
 
@@ -83,7 +82,7 @@ export default function Column({ column }) {
 
       <div
         className={`relative ${isExpanded ? "overflow-y-auto max-h-[60vh] pr-1" : "overflow-visible"}`}
-        style={{ minHeight: cardCount > 0 ? "80px" : "0" }}
+        style={{ minHeight: cardCount > 0 ? "75px" : "0" }}
       >
         {!isExpanded && cardCount > 0 && (
           <div
@@ -93,14 +92,15 @@ export default function Column({ column }) {
               marginBottom: shouldShowStackButton ? "8px" : "0",
             }}
           >
-            {visibleCards.map((card, index) => {
-              const isTopCard = index === visibleCards.length - 1;
+            {displayCards.map((card, index) => {
+              const isTopCard = index === 0;
+              const isStacked = cardCount > 1;
 
               return (
                 <div
                   key={card.id}
                   style={{
-                    ...getStackStyle(index, visibleCards.length),
+                    ...getStackStyle(index, displayCards.length),
                     position: "absolute",
                     width: "100%",
                     left: 0,
@@ -113,7 +113,7 @@ export default function Column({ column }) {
                     onClick={onCardClick}
                     onDragStart={onDragStart}
                     onDragEnd={onDragEnd}
-                    isStacked={cardCount > MAX_STACKED_VISIBLE}
+                    isStacked={isStacked}
                     isTopCard={isTopCard}
                   />
                 </div>
@@ -122,8 +122,8 @@ export default function Column({ column }) {
 
             {hiddenCount > 0 && (
               <div
-                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2"
-                style={{ zIndex: visibleCards.length + 1 }}
+                className="absolute -bottom-1 left-1/2 transform -translate-x-1/2"
+                style={{ zIndex: displayCards.length + 1 }}
               >
                 <span className="text-xs text-gray-500 dark:text-neutral-400 bg-gray-200 dark:bg-neutral-700 px-2 py-0.5 rounded-full">
                   +{hiddenCount}
