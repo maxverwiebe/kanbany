@@ -51,7 +51,7 @@ export default function Column({ column }) {
     if (cardCount === 0) return "0";
     if (cardCount === 1) return "auto";
 
-    const baseHeight = 75;
+    const baseHeight = 100;
     const extraOffset = Math.min(cardCount - 1, MAX_STACKED_DISPLAY - 1) * STACK_OFFSET;
     return `${baseHeight + extraOffset}px`;
   };
@@ -82,7 +82,7 @@ export default function Column({ column }) {
 
       <div
         className={`relative ${isExpanded ? "overflow-y-auto max-h-[60vh] pr-1" : "overflow-visible"}`}
-        style={{ minHeight: cardCount > 0 ? "75px" : "0" }}
+        style={{ minHeight: cardCount > 0 ? "100px" : "0" }}
       >
         {!isExpanded && cardCount > 0 && (
           <div

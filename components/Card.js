@@ -50,14 +50,17 @@ export default function Card({ card, isStacked = false, isTopCard = true }) {
         <>
           <Labels labelIds={card.labels} />
 
-          <div className="flex">
-            {card.description && (
-              <MdFormatAlignLeft className="text-gray-400 text-lg mt-1 mr-2 dark:text-neutral-400" />
-            )}
+          {card.description && (
+            <p className="text-xs text-gray-500 dark:text-neutral-400 mt-1 line-clamp-2">
+              {truncateText(card.description, 60)}
+            </p>
+          )}
+
+          <div className="flex mt-1">
             {checklistProgress && (
-              <div className="flex items-center text-xs text-gray-500 mt-1 dark:text-neutral-400">
+              <div className="flex items-center text-xs text-gray-500 dark:text-neutral-400">
+                <MdOutlineCheckBox className="mr-1 text-gray-400 dark:text-neutral-400" />
                 <span>{checklistProgress}</span>
-                <MdOutlineCheckBox className="ml-1 text-lg text-gray-400 dark:text-neutral-400" />
               </div>
             )}
           </div>
