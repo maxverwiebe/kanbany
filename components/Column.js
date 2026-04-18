@@ -16,34 +16,46 @@ export default function Column({ column }) {
 
   const [newText, setNewText] = useState("test");
   const [isExpanded, setIsExpanded] = useState(false);
-  const MAX_VISIBLE_CARDS = 4;
 
   const columnCards = cards.filter((card) => card.columnId === column.id);
   const cardCount = columnCards.length;
-  const shouldStack = cardCount > MAX_VISIBLE_CARDS && !isExpanded;
+
+  const STACK_OFFSET = 10;
+  const MAX_STACKED_VISIBLE = 3;
 
   const addCardInColumn = () => {
     const id = addCard(column.id, newText);
     openModal(id);
   };
 
-  const getStackedCards = () => {
-    if (!shouldStack) return columnCards;
-    return columnCards.slice(0, MAX_VISIBLE_CARDS);
-  };
-
-  const getStackStyle = (index) => {
-    if (!shouldStack) return {};
-    const stackIndex = MAX_VISIBLE_CARDS - 1 - index;
+  const getStackStyle = (index, total) => {
+    const stackIndex = total - 1 - index;
     return {
-      transform: `translateY(${stackIndex * 8}px) scale(${1 - stackIndex * 0.03})`,
-      zIndex: MAX_VISIBLE_CARDS - index,
-      opacity: 1 - stackIndex * 0.1,
+      transform: `translateY(${stackIndex * STACK_OFFSET}px)`,
+      zIndex: total - index,
+      opacity: index === total - 1 ? 1 : 0.9,
     };
   };
 
-  const stackedCards = getStackedCards();
-  const hiddenCount = shouldStack ? cardCount - MAX_VISIBLE_CARDS : 0;
+  const getVisibleCards = () => {
+    if (isExpanded) return columnCards;
+    if (cardCount <= MAX_STACKED_VISIBLE) return columnCards;
+    return columnCards.slice(cardCount - MAX_STACKED_VISIBLE);
+  };
+
+  const visibleCards = getVisibleCards();
+  const hiddenCount = !isExpanded ? Math.max(0, cardCount - MAX_STACKED_VISIBLE) : 0;
+  const shouldShowStackButton = cardCount > MAX_STACKED_VISIBLE;
+
+  const getStackContainerHeight = () => {
+    if (isExpanded) return "auto";
+    if (cardCount === 0) return "0";
+    if (cardCount === 1) return "auto";
+
+    const baseHeight = 80;
+    const extraOffset = Math.min(cardCount - 1, MAX_STACKED_VISIBLE - 1) * STACK_OFFSET;
+    return `${baseHeight + extraOffset}px`;
+  };
 
   return (
     <div
@@ -69,53 +81,61 @@ export default function Column({ column }) {
         </button>
       </div>
 
-      <div className={`flex-1 ${isExpanded ? "overflow-y-auto max-h-[70vh]" : "overflow-visible"}`}>
-        <div className={shouldStack ? "relative" : ""}>
-          {stackedCards.map((card, index) => (
-            <div
-              key={card.id}
-              style={getStackStyle(index)}
-              className={shouldStack ? "relative transition-all duration-300" : ""}
-            >
-              <Card
-                card={card}
-                onClick={onCardClick}
-                onDragStart={onDragStart}
-                onDragEnd={onDragEnd}
-                isStacked={shouldStack}
-                stackIndex={index}
-              />
-            </div>
-          ))}
-        </div>
+      <div
+        className={`relative ${isExpanded ? "overflow-y-auto max-h-[60vh] pr-1" : "overflow-visible"}`}
+        style={{ minHeight: cardCount > 0 ? "80px" : "0" }}
+      >
+        {!isExpanded && cardCount > 0 && (
+          <div
+            className="relative"
+            style={{
+              height: getStackContainerHeight(),
+              marginBottom: shouldShowStackButton ? "8px" : "0",
+            }}
+          >
+            {visibleCards.map((card, index) => {
+              const isTopCard = index === visibleCards.length - 1;
 
-        {!isExpanded && shouldStack && (
-          <div className="mt-4">
-            {columnCards.slice(MAX_VISIBLE_CARDS).slice(0, 2).map((card, index) => (
+              return (
+                <div
+                  key={card.id}
+                  style={{
+                    ...getStackStyle(index, visibleCards.length),
+                    position: "absolute",
+                    width: "100%",
+                    left: 0,
+                    top: 0,
+                  }}
+                  className="transition-all duration-200"
+                >
+                  <Card
+                    card={card}
+                    onClick={onCardClick}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    isStacked={cardCount > MAX_STACKED_VISIBLE}
+                    isTopCard={isTopCard}
+                  />
+                </div>
+              );
+            })}
+
+            {hiddenCount > 0 && (
               <div
-                key={card.id}
-                className="bg-white/50 dark:bg-neutral-700/50 p-1.5 mb-1 rounded cursor-default overflow-hidden transition-all duration-300 hover:bg-white/70 dark:hover:bg-neutral-700/70"
-                style={{
-                  transform: `translateX(${(index + 1) * 4}px)`,
-                  opacity: 0.6 - index * 0.1,
-                }}
+                className="absolute -bottom-2 left-1/2 transform -translate-x-1/2"
+                style={{ zIndex: visibleCards.length + 1 }}
               >
-                <p className="text-xs text-gray-600 dark:text-neutral-400 truncate">
-                  {card.text?.substring(0, 20) || "..."}
-                </p>
-              </div>
-            ))}
-            {hiddenCount > 2 && (
-              <div className="text-xs text-gray-500 dark:text-neutral-400 text-center mt-1">
-                +{hiddenCount - 2} {hiddenCount - 2 === 1 ? "more" : "more"}
+                <span className="text-xs text-gray-500 dark:text-neutral-400 bg-gray-200 dark:bg-neutral-700 px-2 py-0.5 rounded-full">
+                  +{hiddenCount}
+                </span>
               </div>
             )}
           </div>
         )}
 
-        {isExpanded && cardCount > MAX_VISIBLE_CARDS && (
-          <div className="mt-2">
-            {columnCards.slice(MAX_VISIBLE_CARDS).map((card) => (
+        {isExpanded && (
+          <div className="space-y-2">
+            {columnCards.map((card) => (
               <Card
                 key={card.id}
                 card={card}
@@ -127,10 +147,10 @@ export default function Column({ column }) {
           </div>
         )}
 
-        {cardCount > MAX_VISIBLE_CARDS && (
+        {shouldShowStackButton && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="mt-3 w-full py-2 px-3 text-sm text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 rounded-md flex items-center justify-center gap-1.5 transition-colors"
+            className="w-full py-1.5 px-3 text-xs text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/30 rounded-md flex items-center justify-center gap-1 transition-colors mt-1"
           >
             {isExpanded ? (
               <>
@@ -140,7 +160,7 @@ export default function Column({ column }) {
             ) : (
               <>
                 <FaChevronDown className="text-xs" />
-                <span>显示全部 ({cardCount})</span>
+                <span>展开全部</span>
               </>
             )}
           </button>
