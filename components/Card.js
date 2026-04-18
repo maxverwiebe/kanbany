@@ -2,7 +2,7 @@ import Labels from "./Labels";
 import { useBoard } from "@/lib/BoardContext";
 import { MdOutlineCheckBox, MdFormatAlignLeft } from "react-icons/md";
 
-export default function Card({ card }) {
+export default function Card({ card, isStacked = false, stackIndex = 0 }) {
   const { openModal, onDragStart, onDragEnd } = useBoard();
 
   const truncateText = (text, maxLength) => {
@@ -32,7 +32,7 @@ export default function Card({ card }) {
 
   return (
     <div
-      className="bg-white p-2 mb-2 rounded shadow cursor-pointer w-full dark:bg-neutral-700 dark:text-neutral-200"
+      className={`bg-white p-2 rounded shadow cursor-pointer w-full dark:bg-neutral-700 dark:text-neutral-200 ${isStacked ? 'mb-0 last:mb-2' : 'mb-2'}`}
       draggable
       onClick={() => openModal(card.id)}
       onDragStart={(e) => onDragStart(e, card.id)}
