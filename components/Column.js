@@ -20,7 +20,7 @@ export default function Column({ column }) {
   const columnCards = cards.filter((card) => card.columnId === column.id);
   const cardCount = columnCards.length;
 
-  const STACK_OFFSET = 8;
+  const STACK_OFFSET = 14;
   const MAX_STACKED_DISPLAY = 4;
 
   const addCardInColumn = () => {
@@ -29,10 +29,14 @@ export default function Column({ column }) {
   };
 
   const getStackStyle = (index, total) => {
+    const stackDepth = index;
+    const scale = 1 - stackDepth * 0.02;
+    const shadowIntensity = 0.5 - stackDepth * 0.1;
+
     return {
-      transform: `translateY(${index * STACK_OFFSET}px)`,
+      transform: `translateY(${stackDepth * STACK_OFFSET}px) scale(${scale})`,
       zIndex: total - index,
-      opacity: index === 0 ? 1 : 0.95,
+      opacity: index === 0 ? 1 : 0.9,
     };
   };
 

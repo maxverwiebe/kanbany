@@ -32,7 +32,11 @@ export default function Card({ card, isStacked = false, isTopCard = true }) {
 
   return (
     <div
-      className={`bg-white p-2 rounded shadow cursor-pointer w-full dark:bg-neutral-700 dark:text-neutral-200 ${isStacked && !isTopCard ? 'overflow-hidden' : ''}`}
+      className={`rounded shadow cursor-pointer w-full ${
+        isStacked && !isTopCard
+          ? 'bg-gray-50 border border-gray-200 dark:bg-neutral-800 dark:border-neutral-600 dark:text-neutral-200'
+          : 'bg-white dark:bg-neutral-700 dark:text-neutral-200'
+      } ${isStacked && !isTopCard ? 'overflow-hidden' : ''} p-2`}
       style={{
         maxHeight: isStacked && !isTopCard ? "32px" : "none",
       }}
