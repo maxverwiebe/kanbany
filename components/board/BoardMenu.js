@@ -31,6 +31,12 @@ export default function BoardMenu({ handlers, isDarkMode }) {
           >
             {i18n.t("label.manage")}
           </button>
+          <button
+            className="w-full text-left px-4 py-2 hover:bg-violet-100 dark:hover:bg-violet-950 rounded"
+            onClick={handlers.openArchivedCards}
+          >
+            {i18n.t("archive.viewArchivedCards")}
+          </button>
           <div className="border-t border-neutral-200 dark:border-neutral-700 my-1" />
           <div className="w-full flex items-center justify-between px-4 py-2 hover:bg-violet-100 dark:hover:bg-violet-950 rounded">
             <span>{i18n.t("general.darkMode")}</span>
