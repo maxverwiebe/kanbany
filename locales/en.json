@@ -25,7 +25,12 @@
         "modalConfirmDelete": "Delete Card",
         "modalConfirmDeleteDetails": "Are you sure that you want to delete this Card? It cannot be undone!",
         "modalConfirmDeleteYes": "Yes, delete",
-        "modalConfirmDeleteNo": "Cancel"
+        "modalConfirmDeleteNo": "Cancel",
+        "modalConfirmArchive": "Archive Card",
+        "modalConfirmArchiveDetails": "Are you sure that you want to archive this Card? You can restore it later from the menu.",
+        "modalConfirmArchiveYes": "Yes, archive",
+        "modalConfirmArchiveNo": "Cancel",
+        "archive": "Archive"
     },
     "column": {
         "add": "Add column",
@@ -60,5 +65,17 @@
         "toastExportError": "Export failed!",
         "export": "Export as JSON",
         "import": "Import from JSON"
+    },
+    "archive": {
+        "viewArchivedCards": "View Archived Cards",
+        "archivedCards": "Archived Cards",
+        "noArchivedCards": "No archived cards yet.",
+        "backToList": "← Back to list",
+        "restoreCard": "Restore Card",
+        "originalColumn": "Original column",
+        "archivedAt": "Archived at",
+        "description": "Description",
+        "checklists": "Checklists",
+        "toastRestored": "Restored card!"
     }
 }

@@ -9,6 +9,7 @@ import BoardHeader from "./BoardHeader";
 import BoardMenu from "./BoardMenu";
 import BoardContent from "./BoardContent";
 import BoardModals from "./BoardModals";
+import ArchivedCardsModal from "../ArchivedCardsModal";
 
 export default function Board() {
   const board = useBoard();
@@ -16,6 +17,7 @@ export default function Board() {
     columns,
     cards,
     labels,
+    archivedCards,
     exportBoard,
     importBoard,
     updateCard,
@@ -32,12 +34,13 @@ export default function Board() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [importChecked, setImportChecked] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showArchivedCards, setShowArchivedCards] = useState(false);
 
   const { ImportLocalStorage, ExportLocalStorage } = LocalStorageSaver();
   useEffect(() => {
     if (!importChecked) return;
     ExportLocalStorage(exportBoard());
-  }, [columns, cards, labels]);
+  }, [columns, cards, labels, archivedCards]);
 
   useEffect(() => {
     const loadLocal = async () => {
@@ -68,6 +71,10 @@ export default function Board() {
     },
     openLabelManager: () => {
       setShowLabelManager(true);
+      setShowDropdown(false);
+    },
+    openArchivedCards: () => {
+      setShowArchivedCards(true);
       setShowDropdown(false);
     },
     toggleDarkMode: () => {
@@ -128,6 +135,11 @@ export default function Board() {
         setShowColManager={setShowColManager}
         showLabelManager={showLabelManager}
         setShowLabelManager={setShowLabelManager}
+      />
+
+      <ArchivedCardsModal
+        isOpen={showArchivedCards}
+        onClose={() => setShowArchivedCards(false)}
       />
     </div>
   );

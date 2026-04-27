@@ -18,6 +18,7 @@ export default function CardModal() {
     closeModal,
     labels,
     setCards,
+    archiveCard,
   } = useBoard();
   const card = cards.find((c) => c.id === modalCardId);
 
@@ -35,6 +36,8 @@ export default function CardModal() {
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] =
+    useState(false);
+  const [isConfirmArchiveModalOpen, setIsConfirmArchiveModalOpen] =
     useState(false);
 
   const [originalData, setOriginalData] = useState(null);
@@ -199,6 +202,12 @@ export default function CardModal() {
   const handleDelete = () => {
     setCards((prev) => prev.filter((c) => c.id !== card.id));
     addToast("Deleted card!", "success");
+    closeModal();
+  };
+
+  const handleArchive = () => {
+    archiveCard(card.id);
+    addToast("Archived card!", "success");
     closeModal();
   };
 
@@ -514,13 +523,22 @@ export default function CardModal() {
             <MobileContent />
           </div>
           <div className="mt-4 border-t border-neutral-300 pt-4 flex items-center justify-between dark:border-neutral-600">
-            <button
-              onClick={() => setIsConfirmDeleteModalOpen(true)}
-              className="px-4 py-2 text-sm rounded-md hover:text-red-500 hover:bg-red-200 bg-gray-300 transition dark:bg-neutral-600 dark:text-neutral-200"
-              title="Delete card"
-            >
-              Delete
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setIsConfirmArchiveModalOpen(true)}
+                className="px-4 py-2 text-sm rounded-md hover:text-amber-500 hover:bg-amber-100 bg-gray-300 transition dark:bg-neutral-600 dark:text-neutral-200"
+                title="Archive card"
+              >
+                {i18n.t("card.archive")}
+              </button>
+              <button
+                onClick={() => setIsConfirmDeleteModalOpen(true)}
+                className="px-4 py-2 text-sm rounded-md hover:text-red-500 hover:bg-red-200 bg-gray-300 transition dark:bg-neutral-600 dark:text-neutral-200"
+                title="Delete card"
+              >
+                Delete
+              </button>
+            </div>
             <div className="flex space-x-2">
               <button
                 onClick={handleCloseModal}
@@ -608,6 +626,16 @@ export default function CardModal() {
           cancelText={i18n.t("card.modalConfirmDeleteNo")}
           onConfirm={handleDelete}
           onCancel={() => setIsConfirmDeleteModalOpen(false)}
+        />
+      )}
+      {isConfirmArchiveModalOpen && (
+        <ConfirmationModal
+          title={i18n.t("card.modalConfirmArchive")}
+          message={i18n.t("card.modalConfirmArchiveDetails")}
+          confirmText={i18n.t("card.modalConfirmArchiveYes")}
+          cancelText={i18n.t("card.modalConfirmArchiveNo")}
+          onConfirm={handleArchive}
+          onCancel={() => setIsConfirmArchiveModalOpen(false)}
         />
       )}
     </>
