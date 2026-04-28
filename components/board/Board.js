@@ -77,7 +77,7 @@ export default function Board() {
       document.documentElement.classList.toggle("dark", val);
     },
     exportFile: () => {
-      const json = exportBoard();
+      const json = JSON.stringify(exportBoard());
       const blob = new Blob([json], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
