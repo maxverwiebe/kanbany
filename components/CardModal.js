@@ -3,7 +3,7 @@ import { useBoard } from "@/lib/BoardContext";
 import i18n from "@/lib/i18n";
 import { addToast } from "@/lib/Toast";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
-import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
+import { MdFullscreen, MdFullscreenExit, MdCalendarToday, MdClose } from "react-icons/md";
 import { GrNewWindow } from "react-icons/gr";
 import { MdDeleteOutline } from "react-icons/md";
 import CardChecklist from "./CardChecklist";
@@ -25,6 +25,7 @@ export default function CardModal() {
   const [description, setDescription] = useState(card?.description || "");
   const [selectedLabels, setSelectedLabels] = useState(card?.labels || []);
   const [columnID, setColumnID] = useState(card?.columnId || "");
+  const [dueDate, setDueDate] = useState(card?.dueDate || "");
 
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
@@ -132,6 +133,7 @@ export default function CardModal() {
       setDescription(card.description || "");
       setSelectedLabels(card.labels || []);
       setColumnID(card.columnId);
+      setDueDate(card.dueDate || "");
       setFullscreenDesc(card.description || "");
 
       setOriginalData(
@@ -142,6 +144,7 @@ export default function CardModal() {
             selectedLabels: card.labels || [],
             columnID: card.columnId,
             checklist: card.checklist || [],
+            dueDate: card.dueDate || "",
           })
         )
       );
@@ -164,6 +167,7 @@ export default function CardModal() {
       selectedLabels,
       columnID,
       checklist,
+      dueDate,
     };
     return JSON.stringify(currentData) !== JSON.stringify(originalData);
   };
@@ -175,6 +179,7 @@ export default function CardModal() {
       labels: selectedLabels,
       columnId: columnID,
       checklist: checklist,
+      dueDate: dueDate || null,
     });
     addToast("Updated card!", "success");
     closeModal();
@@ -343,6 +348,33 @@ export default function CardModal() {
             </select>
           </div>
           <div className="mb-4">
+            <h3 className="text-md font-semibold text-neutral-700 mb-2 dark:text-neutral-200 flex items-center gap-2">
+              <MdCalendarToday className="text-sm" />
+              {i18n.t("card.dueDate")}
+            </h3>
+            <div className="flex items-center gap-2">
+              <input
+                type="date"
+                className="flex-1 p-2 rounded-md transition duration-300 ease-in-out 
+               focus:outline-none focus:border-neutral-400 hover:border-neutral-400 
+               border-neutral-300 text-neutral-800 bg-white
+               dark:text-neutral-200 dark:border-neutral-600 dark:bg-neutral-800"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+              />
+              {dueDate && (
+                <button
+                  type="button"
+                  onClick={() => setDueDate("")}
+                  className="p-2 rounded hover:bg-red-100 text-neutral-400 hover:text-red-500 transition dark:hover:bg-red-900"
+                  title={i18n.t("card.dueDateRemove")}
+                >
+                  <MdClose />
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="mb-4">
             <h3 className="text-md font-semibold text-neutral-700 mb-2 dark:text-neutral-200">
               {i18n.t("card.labels")}
             </h3>
@@ -463,6 +495,30 @@ export default function CardModal() {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="mb-4">
+            <h3 className="text-md font-semibold text-neutral-700 mb-2 dark:text-neutral-200 flex items-center gap-2">
+              <MdCalendarToday className="text-sm" />
+              {i18n.t("card.dueDate")}
+            </h3>
+            <div className="flex items-center gap-2">
+              <input
+                type="date"
+                className="flex-1 p-2 border border-neutral-300 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 rounded-md transition duration-300 ease-in-out focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-500 hover:border-neutral-400"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+              />
+              {dueDate && (
+                <button
+                  type="button"
+                  onClick={() => setDueDate("")}
+                  className="p-2 rounded hover:bg-red-100 text-neutral-400 hover:text-red-500 transition dark:hover:bg-red-900"
+                  title={i18n.t("card.dueDateRemove")}
+                >
+                  <MdClose />
+                </button>
+              )}
+            </div>
           </div>
           <div className="mb-4">
             <h3 className="text-md font-semibold text-neutral-700 mb-2 dark:text-neutral-200">

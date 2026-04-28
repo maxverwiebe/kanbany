@@ -3,7 +3,9 @@
         "edit": "Karte bearbeiten",
         "delete": "Löschen",
         "save": "Speichern",
-        "cancel": "Abbrechen"
+        "cancel": "Abbrechen",
+        "dueDate": "Fälligkeitsdatum",
+        "dueDateRemove": "Fälligkeitsdatum entfernen"
     },
     "column": {
         "add": "Spalte hinzufügen",
