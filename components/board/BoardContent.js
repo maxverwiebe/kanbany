@@ -15,7 +15,7 @@ export default function BoardContent({
           <Column
             key={col.id}
             column={col}
-            cards={cards.filter((c) => c.columnId === col.id)}
+            cards={cards}
             handlers={handlers}
           />
         ))}
