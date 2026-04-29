@@ -2,7 +2,7 @@ import Labels from "./Labels";
 import { useBoard } from "@/lib/BoardContext";
 import { MdOutlineCheckBox, MdFormatAlignLeft } from "react-icons/md";
 
-export default function Card({ card }) {
+export default function Card({ card, onDrop, onDragOver }) {
   const { openModal, onDragStart, onDragEnd } = useBoard();
 
   const truncateText = (text, maxLength) => {
@@ -37,6 +37,8 @@ export default function Card({ card }) {
       onClick={() => openModal(card.id)}
       onDragStart={(e) => onDragStart(e, card.id)}
       onDragEnd={onDragEnd}
+      onDrop={onDrop}
+      onDragOver={onDragOver}
       data-card-id={card.id}
     >
       <h3 className="font-medium">{truncateText(card.text, 25)}</h3>

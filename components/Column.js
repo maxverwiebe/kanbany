@@ -3,16 +3,18 @@ import Card from "./Card";
 import { useBoard } from "@/lib/BoardContext";
 import { FaRegStickyNote } from "react-icons/fa";
 
-export default function Column({ column }) {
+export default function Column({ column, cards: propCards }) {
   const {
-    cards,
     addCard,
-    onCardClick,
     onDragStart,
     onDragEnd,
     onDrop,
     openModal,
+    cards: contextCards,
   } = useBoard();
+  
+  // 使用从props传递的cards，如果没有则使用useBoard中的cards
+  const cards = propCards || contextCards;
 
   const [newText, setNewText] = useState("test");
 
@@ -50,13 +52,16 @@ export default function Column({ column }) {
       <div className="flex-1 overflow-y-auto max-h-[70vh] overflow-show">
         {cards
           .filter((card) => card.columnId === column.id)
+          .sort((a, b) => a.order - b.order)
           .map((card) => (
             <Card
               key={card.id}
               card={card}
-              onClick={onCardClick}
+              onClick={openModal}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
+              onDrop={(e) => onDrop(e, column.id, card.id)}
+              onDragOver={(e) => e.preventDefault()}
             />
           ))}
       </div>
