@@ -52,7 +52,7 @@ export default function Column({ column, cards: propCards }) {
       <div className="flex-1 overflow-y-auto max-h-[70vh] overflow-show">
         {cards
           .filter((card) => card.columnId === column.id)
-          .sort((a, b) => a.order - b.order)
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
           .map((card) => (
             <Card
               key={card.id}
